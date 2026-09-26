@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário Interativo com PDF - e-Título</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 10px;
+    }
+    .header {
+      background: #173058;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .header p {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 1200px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+    }
+    .pdf-section {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      height: fit-content;
+    }
+    .pdf-title {
+      font-weight: 600;
+      color: #173058;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    #pdf-canvas {
+      border: 2px solid #e2e8f0;
+      border-radius: 6px;
+      cursor: crosshair;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .coords-display {
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      text-align: center;
+      color: #1351B4;
+      font-weight: 600;
+    }
+    .form-section {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      height: fit-content;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .form-title {
+      font-weight: 600;
+      color: #173058;
+      margin-bottom: 15px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .tab-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .tab-btn {
+      padding: 8px 12px;
+      border: 2px solid #cbd5e1;
+      background: white;
+      color: #475569;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: #1351B4;
+      color: white;
+      border-color: #1351B4;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .field-group {
+      margin-bottom: 12px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      border-left: 3px solid #1351B4;
+    }
+    .field-group.active {
+      background: #fff3cd;
+      border-left-color: #f59e0b;
+    }
+    .field-label {
+      font-weight: 600;
+      color: #475569;
+      font-size: 11px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .field-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .field-input {
+      display: flex;
+      flex-direction: column;
+    }
+    .field-input label {
+      font-size: 10px;
+      color: #64748b;
+      margin-bottom: 3px;
+    }
+    .field-input input {
+      padding: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    .field-input input:focus {
+      outline: none;
+      border-color: #1351B4;
+      box-shadow: 0 0 0 2px rgba(19, 81, 180, 0.1);
+    }
+    .assinatura-group {
+      background: #eff6ff;
+      border: 2px solid #2196F3;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+    .assinatura-group .field-label {
+      color: #1565c0;
+      margin-bottom: 10px;
+    }
+    .assinatura-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .assinatura-corner {
+      border-bottom: 1px solid #bfdbfe;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .assinatura-corner:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+    .assinatura-corner-label {
+      font-size: 10px;
+      color: #1565c0;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 15px;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      padding: 15px 0 0 0;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copiar {
+      background: #168821;
+      color: white;
+    }
+    .btn-copiar:hover {
+      background: #13741c;
+    }
+    .btn-limpar {
+      background: #e2e8f0;
+      color: #475569;
+    }
+    .btn-limpar:hover {
+      background: #cbd5e1;
+    }
+    .info-box {
+      background: #eff6ff;
+      border-left: 3px solid #2196F3;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      color: #1565c0;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📍 Mapeador Interativo de Coordenadas - e-Título</h1>
+  <p>Clique no PDF para capturar as coordenadas X, Y</p>
+</div>
+
+<div class="main">
+
+  <!-- SEÇÃO PDF -->
+  <div class="pdf-section">
+    <div class="pdf-title">PDF do Comprovante</div>
+    <canvas id="pdf-canvas"></canvas>
+    <div class="coords-display">
+      X: <span id="coord-x">0</span> | Y: <span id="coord-y">0</span>
+    </div>
+  </div>
+
+  <!-- SEÇÃO FORMULÁRIO -->
+  <div class="form-section">
+    <div class="form-title">
+      Formulário de Coordenadas
+      <span id="field-name" style="color: #1351B4; margin-left: auto; font-size: 12px;"></span>
+    </div>
+
+    <div class="info-box">
+      1. Selecione o campo abaixo<br>
+      2. Clique no PDF para capturar X, Y<br>
+      3. Clique "Copiar Resultado" ao final
+    </div>
+
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="mudarAba('pag1')">Página 1</button>
+      <button class="tab-btn" onclick="mudarAba('pag2')">Página 2</button>
+    </div>
+
+    <!-- PÁGINA 1 -->
+    <div id="pag1" class="tab-content active">
+      <div class="field-group" onclick="selecionarCampo('pag1_data_dia', this)">
+        <div class="field-label">Data da Eleição - DIA</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_data_dia_x" placeholder="111">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_data_dia_y" placeholder="190">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_data_mes', this)">
+        <div class="field-label">Data da Eleição - MÊS</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_data_mes_x" placeholder="150">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_data_mes_y" placeholder="190">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_data_ano', this)">
+        <div class="field-label">Data da Eleição - ANO</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_data_ano_x" placeholder="190">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_data_ano_y" placeholder="190">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_turno1', this)">
+        <div class="field-label">Checkbox 1º Turno</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_turno1_x" placeholder="228">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_turno1_y" placeholder="98">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_turno2', this)">
+        <div class="field-label">Checkbox 2º Turno</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_turno2_x" placeholder="259">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_turno2_y" placeholder="98">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_titulo', this)">
+        <div class="field-label">Número do Título Eleitoral</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_titulo_x" placeholder="383">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_titulo_y" placeholder="188">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_nasc', this)">
+        <div class="field-label">Ano de Nascimento</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_nasc_x" placeholder="665">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_nasc_y" placeholder="189">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag1_nome', this)">
+        <div class="field-label">Nome Completo</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag1_nome_x" placeholder="117">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag1_nome_y" placeholder="266">
+          </div>
+        </div>
+      </div>
+
+      <div class="assinatura-group">
+        <div class="field-label">Caixa de Assinatura - 4 Pontos</div>
+
+        <div class="assinatura-corner" onclick="selecionarCampo('pag1_assin_se', event)">
+          <div class="assinatura-corner-label">Superior Esquerdo</div>
+          <div class="assinatura-inputs">
+            <div class="field-input">
+              <label>X</label>
+              <input type="number" id="pag1_assin_x1" placeholder="100">
+            </div>
+            <div class="field-input">
+              <label>Y</label>
+              <input type="number" id="pag1_assin_y1" placeholder="300">
+            </div>
+          </div>
+        </div>
+
+        <div class="assinatura-corner" onclick="selecionarCampo('pag1_assin_sd', event)">
+          <div class="assinatura-corner-label">Superior Direito</div>
+          <div class="assinatura-inputs">
+            <div class="field-input">
+              <label>X</label>
+              <input type="number" id="pag1_assin_x2" placeholder="280">
+            </div>
+            <div class="field-input">
+              <label>Y</label>
+              <input type="number" id="pag1_assin_y2" placeholder="300">
+            </div>
+          </div>
+        </div>
+
+        <div class="assinatura-corner" onclick="selecionarCampo('pag1_assin_ie', event)">
+          <div class="assinatura-corner-label">Inferior Esquerdo</div>
+          <div class="assinatura-inputs">
+            <div class="field-input">
+              <label>X</label>
+              <input type="number" id="pag1_assin_x3" placeholder="100">
+            </div>
+            <div class="field-input">
+              <label>Y</label>
+              <input type="number" id="pag1_assin_y3" placeholder="380">
+            </div>
+          </div>
+        </div>
+
+        <div class="assinatura-corner" onclick="selecionarCampo('pag1_assin_id', event)">
+          <div class="assinatura-corner-label">Inferior Direito</div>
+          <div class="assinatura-inputs">
+            <div class="field-input">
+              <label>X</label>
+              <input type="number" id="pag1_assin_x4" placeholder="280">
+            </div>
+            <div class="field-input">
+              <label>Y</label>
+              <input type="number" id="pag1_assin_y4" placeholder="380">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PÁGINA 2 -->
+    <div id="pag2" class="tab-content">
+      <div class="field-group" onclick="selecionarCampo('pag2_data_dia', this)">
+        <div class="field-label">Data da Eleição - DIA</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_data_dia_x" placeholder="794">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_data_dia_y" placeholder="189">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_data_mes', this)">
+        <div class="field-label">Data da Eleição - MÊS</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_data_mes_x" placeholder="833">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_data_mes_y" placeholder="189">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_data_ano', this)">
+        <div class="field-label">Data da Eleição - ANO</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_data_ano_x" placeholder="872">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_data_ano_y" placeholder="189">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_turno1', this)">
+        <div class="field-label">Checkbox 1º Turno</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_turno1_x" placeholder="883">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_turno1_y" placeholder="98">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_turno2', this)">
+        <div class="field-label">Checkbox 2º Turno</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_turno2_x" placeholder="914">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_turno2_y" placeholder="98">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_titulo', this)">
+        <div class="field-label">Número do Título Eleitoral</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_titulo_x" placeholder="1025">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_titulo_y" placeholder="188">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_nasc', this)">
+        <div class="field-label">Ano de Nascimento</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_nasc_x" placeholder="1230">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_nasc_y" placeholder="184">
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group" onclick="selecionarCampo('pag2_nome', this)">
+        <div class="field-label">Nome Completo</div>
+        <div class="field-inputs">
+          <div class="field-input">
+            <label>X</label>
+            <input type="number" id="pag2_nome_x" placeholder="813">
+          </div>
+          <div class="field-input">
+            <label>Y</label>
+            <input type="number" id="pag2_nome_y" placeholder="256">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn-copiar" onclick="gerarResultado()">Copiar Resultado</button>
+      <button class="btn-limpar" onclick="limparFormulario()">Limpar Tudo</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let currentField = null;
+const fieldLabels = {
+  'pag1_data_dia': 'Data da Eleição DIA - Pág 1',
+  'pag1_data_mes': 'Data da Eleição MÊS - Pág 1',
+  'pag1_data_ano': 'Data da Eleição ANO - Pág 1',
+  'pag1_turno1': 'Checkbox 1º Turno - Pág 1',
+  'pag1_turno2': 'Checkbox 2º Turno - Pág 1',
+  'pag1_titulo': 'Número do Título - Pág 1',
+  'pag1_nasc': 'Ano de Nascimento - Pág 1',
+  'pag1_nome': 'Nome Completo - Pág 1',
+  'pag1_assin_se': 'Assinatura SE - Pág 1',
+  'pag1_assin_sd': 'Assinatura SD - Pág 1',
+  'pag1_assin_ie': 'Assinatura IE - Pág 1',
+  'pag1_assin_id': 'Assinatura ID - Pág 1',
+  'pag2_data_dia': 'Data da Eleição DIA - Pág 2',
+  'pag2_data_mes': 'Data da Eleição MÊS - Pág 2',
+  'pag2_data_ano': 'Data da Eleição ANO - Pág 2',
+  'pag2_turno1': 'Checkbox 1º Turno - Pág 2',
+  'pag2_turno2': 'Checkbox 2º Turno - Pág 2',
+  'pag2_titulo': 'Número do Título - Pág 2',
+  'pag2_nasc': 'Ano de Nascimento - Pág 2',
+  'pag2_nome': 'Nome Completo - Pág 2'
+};
+
+const canvas = document.getElementById('pdf-canvas');
+
+// Carrega PDF
+pdfjsLib.getDocument('desen/atendimento-else/images/comprovante.pdf').promise.then(pdf => {
+  return pdf.getPage(1);
+}).then(page => {
+  const scale = 1;
+  const viewport = page.getViewport({ scale });
+  canvas.height = viewport.height;
+  canvas.width = viewport.width;
+  const context = canvas.getContext('2d');
+  page.render({ canvasContext: context, viewport }).promise.then(() => {
+    console.log('PDF carregado');
+  });
+}).catch(err => console.error('Erro ao carregar PDF:', err));
+
+canvas.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+  document.getElementById('coord-x').textContent = x;
+  document.getElementById('coord-y').textContent = y;
+});
+
+canvas.addEventListener('click', (e) => {
+  if (!currentField) {
+    alert('Selecione um campo primeiro clicando no formulário');
+    return;
+  }
+  const rect = canvas.getBoundingClientRect();
+  const x = Math.round(e.clientX - rect.left);
+  const y = Math.round(e.clientY - rect.top);
+
+  const fieldMap = {
+    'pag1_data_dia': ['pag1_data_dia_x', 'pag1_data_dia_y'],
+    'pag1_data_mes': ['pag1_data_mes_x', 'pag1_data_mes_y'],
+    'pag1_data_ano': ['pag1_data_ano_x', 'pag1_data_ano_y'],
+    'pag1_turno1': ['pag1_turno1_x', 'pag1_turno1_y'],
+    'pag1_turno2': ['pag1_turno2_x', 'pag1_turno2_y'],
+    'pag1_titulo': ['pag1_titulo_x', 'pag1_titulo_y'],
+    'pag1_nasc': ['pag1_nasc_x', 'pag1_nasc_y'],
+    'pag1_nome': ['pag1_nome_x', 'pag1_nome_y'],
+    'pag1_assin_se': ['pag1_assin_x1', 'pag1_assin_y1'],
+    'pag1_assin_sd': ['pag1_assin_x2', 'pag1_assin_y2'],
+    'pag1_assin_ie': ['pag1_assin_x3', 'pag1_assin_y3'],
+    'pag1_assin_id': ['pag1_assin_x4', 'pag1_assin_y4'],
+    'pag2_data_dia': ['pag2_data_dia_x', 'pag2_data_dia_y'],
+    'pag2_data_mes': ['pag2_data_mes_x', 'pag2_data_mes_y'],
+    'pag2_data_ano': ['pag2_data_ano_x', 'pag2_data_ano_y'],
+    'pag2_turno1': ['pag2_turno1_x', 'pag2_turno1_y'],
+    'pag2_turno2': ['pag2_turno2_x', 'pag2_turno2_y'],
+    'pag2_titulo': ['pag2_titulo_x', 'pag2_titulo_y'],
+    'pag2_nasc': ['pag2_nasc_x', 'pag2_nasc_y'],
+    'pag2_nome': ['pag2_nome_x', 'pag2_nome_y']
+  };
+
+  const [xField, yField] = fieldMap[currentField];
+  if (xField && yField) {
+    document.getElementById(xField).value = x;
+    document.getElementById(yField).value = y;
+  }
+});
+
+function selecionarCampo(field, element) {
+  document.querySelectorAll('.field-group').forEach(el => el.classList.remove('active'));
+  if (element && element.classList) {
+    element.classList.add('active');
+  }
+  currentField = field;
+  document.getElementById('field-name').textContent = fieldLabels[field] || '';
+}
+
+function mudarAba(aba) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(aba).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function gerarResultado() {
+  const getValue = (id) => {
+    const el = document.getElementById(id);
+    return el ? (parseInt(el.value) || 0) : 0;
+  };
+
+  const pag1 = {
+    data_dia: { x: getValue('pag1_data_dia_x'), y: getValue('pag1_data_dia_y') },
+    data_mes: { x: getValue('pag1_data_mes_x'), y: getValue('pag1_data_mes_y') },
+    data_ano: { x: getValue('pag1_data_ano_x'), y: getValue('pag1_data_ano_y') },
+    turno1_checkbox: { x: getValue('pag1_turno1_x'), y: getValue('pag1_turno1_y') },
+    turno2_checkbox: { x: getValue('pag1_turno2_x'), y: getValue('pag1_turno2_y') },
+    titulo: { x: getValue('pag1_titulo_x'), y: getValue('pag1_titulo_y') },
+    nasc: { x: getValue('pag1_nasc_x'), y: getValue('pag1_nasc_y') },
+    nome: { x: getValue('pag1_nome_x'), y: getValue('pag1_nome_y') },
+    assinatura: {
+      x: getValue('pag1_assin_x1'),
+      y: getValue('pag1_assin_y1'),
+      width: getValue('pag1_assin_x2') - getValue('pag1_assin_x1'),
+      height: getValue('pag1_assin_y3') - getValue('pag1_assin_y1')
+    }
+  };
+
+  const pag2 = {
+    data_dia: { x: getValue('pag2_data_dia_x'), y: getValue('pag2_data_dia_y') },
+    data_mes: { x: getValue('pag2_data_mes_x'), y: getValue('pag2_data_mes_y') },
+    data_ano: { x: getValue('pag2_data_ano_x'), y: getValue('pag2_data_ano_y') },
+    turno1_checkbox: { x: getValue('pag2_turno1_x'), y: getValue('pag2_turno1_y') },
+    turno2_checkbox: { x: getValue('pag2_turno2_x'), y: getValue('pag2_turno2_y') },
+    titulo: { x: getValue('pag2_titulo_x'), y: getValue('pag2_titulo_y') },
+    nasc: { x: getValue('pag2_nasc_x'), y: getValue('pag2_nasc_y') },
+    nome: { x: getValue('pag2_nome_x'), y: getValue('pag2_nome_y') }
+  };
+
+  const output = `// Coordenadas - Página 1
+const COORDENADAS_PAG1 = ${JSON.stringify(pag1, null, 2)};
+
+// Coordenadas - Página 2
+const COORDENADAS_PAG2 = ${JSON.stringify(pag2, null, 2)};`;
+
+  navigator.clipboard.writeText(output).then(() => {
+    alert('✅ Coordenadas copiadas para clipboard!\n\nCole em preencher_comprovante.js');
+    console.log('=== COORDENADAS COPIADAS ===');
+    console.log(output);
+  }).catch(() => {
+    alert('❌ Erro ao copiar. Abra o console (F12) e copie manualmente');
+    console.log('=== COORDENADAS ===');
+    console.log(output);
+  });
+}
+
+function limparFormulario() {
+  document.querySelectorAll('input').forEach(input => input.value = '');
+  document.querySelectorAll('.field-group').forEach(el => el.classList.remove('active'));
+  currentField = null;
+  document.getElementById('field-name').textContent = '';
+}
+</script>
+
+</body>
+</html>

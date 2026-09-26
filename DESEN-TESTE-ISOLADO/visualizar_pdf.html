@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizar PDF do Comprovante</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    h1 { color: #333; }
+    #canvas { border: 2px solid #333; max-width: 100%; margin: 20px 0; }
+    .info { background: white; padding: 20px; border-radius: 8px; }
+    .fields { margin-top: 20px; }
+    .field {
+      background: #f9f9f9;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 3px solid #173058;
+    }
+  </style>
+</head>
+<body>
+  <h1>📄 Visualizar Comprovante PDF</h1>
+
+  <div class="info">
+    <p><strong>PDF:</strong> comprovante.pdf</p>
+    <p><strong>Instruções:</strong> Analise a imagem abaixo e liste os campos que precisam ser preenchidos.</p>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="info fields">
+    <h2>Campos Identificados:</h2>
+    <div class="field">
+      <input type="checkbox"> Nome Completo
+    </div>
+    <div class="field">
+      <input type="checkbox"> CPF
+    </div>
+    <div class="field">
+      <input type="checkbox"> Data de Nascimento
+    </div>
+    <div class="field">
+      <input type="checkbox"> Nome da Mãe
+    </div>
+    <div class="field">
+      <input type="checkbox"> Turno (1º/2º)
+    </div>
+    <div class="field">
+      <input type="checkbox"> Motivo da Ausência
+    </div>
+    <div class="field">
+      <input type="checkbox"> Email
+    </div>
+    <div class="field">
+      <input type="checkbox"> Assinatura
+    </div>
+    <div class="field">
+      <input type="checkbox"> Número do Título
+    </div>
+    <div class="field">
+      <input type="text" placeholder="Outro campo (descreva)">
+    </div>
+  </div>
+
+  <script>
+    const url = 'images/comprovante.pdf';
+
+    pdfjsLib.getDocument(url).promise.then(function(pdf) {
+      return pdf.getPage(1);
+    }).then(function(page) {
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale: scale });
+
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      return page.render(renderContext).promise;
+    }).catch(function(error) {
+      alert('❌ Erro ao carregar PDF: ' + error.message);
+    });
+  </script>
+</body>
+</html>

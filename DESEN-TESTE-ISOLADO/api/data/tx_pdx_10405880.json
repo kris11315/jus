@@ -1,0 +1,26 @@
+{
+    "id": "pdx_10405880",
+    "gateway": "paradise",
+    "external_id": "pix-1790305078-1446",
+    "status": "pending",
+    "amount": 1790,
+    "product": "Comprovante de Justificativa de Voto - e-Título",
+    "etapa": "pagamento_justificativa",
+    "customer": {
+        "name": "BIANCA CRISTINA JESUS DA SILVA",
+        "email": "justificando@gmail.com",
+        "phone": "11999999999",
+        "document": "07464342518"
+    },
+    "utm": [],
+    "meta": {
+        "fbp": "",
+        "fbc": "",
+        "ip": "::1",
+        "ua": "Mozilla\/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit\/605.1.15 (KHTML, like Gecko) Version\/18.5 Mobile\/15E148 Safari\/604.1",
+        "sourceUrl": "http:\/\/localhost\/etitulo\/DESEN-TESTE-ISOLADO\/desen\/atendimento-else\/index.html?cpf=07464342518"
+    },
+    "createdAt": "2026-09-25T02:58:00+00:00",
+    "paradise_id": "10405880",
+    "updatedAt": "2026-09-25T02:58:00+00:00"
+}

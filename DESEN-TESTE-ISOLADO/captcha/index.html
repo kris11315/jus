@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <!-- Utmify: captura de UTMs + pixel (ver desen/js/utmify-tracking.js) -->
+  <script src="/desen/js/utmify-tracking.js"></script>
+  <!-- Pixel da Meta nativo + eventos Purchase/IC (ver desen/js/meta-pixel.js) -->
+  <script src="/desen/js/meta-pixel.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Consulta de Débitos</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0d1b2e;
+      --navy-mid: #162640;
+      --green: #2ecc71;
+      --green-dark: #27ae60;
+      --yellow: #f5c518;
+      --yellow-dark: #d4a800;
+      --neutral-100: #f8fafc;
+      --neutral-200: #e2e8f0;
+      --neutral-400: #94a3b8;
+      --neutral-600: #64748b;
+      --neutral-800: #1e293b;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--neutral-800);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      padding: 48px 40px;
+      max-width: 520px;
+      width: 100%;
+      text-align: center;
+      border-top: 4px solid var(--green);
+    }
+
+    .card-badge {
+      display: inline-block;
+      background: transparent;
+      color: var(--green-dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      border-radius: 100px;
+      border: 1.5px solid var(--green-dark);
+      margin-bottom: 24px;
+    }
+
+    .card h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .card .subtitle {
+      font-size: 0.95rem;
+      color: var(--neutral-600);
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .card-disclaimer {
+      font-size: 0.75rem;
+      color: var(--neutral-400);
+      background: var(--neutral-100);
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--navy);
+      border: none;
+      padding: 16px 48px;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 20px rgba(245, 197, 24, 0.35);
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary:hover {
+      background: var(--yellow-dark);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      background: var(--navy-mid);
+      color: var(--neutral-400);
+      text-align: center;
+      padding: 20px 24px;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    footer a {
+      color: var(--neutral-400);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--white); }
+
+    footer .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    footer .footer-links span { color: var(--neutral-600); }
+
+    footer .footer-info {
+      font-size: 0.75rem;
+      color: var(--neutral-600);
+      line-height: 1.7;
+      margin-top: 6px;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 40, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .overlay.active { display: flex; }
+
+    .popup {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 24px 18px;
+      max-width: 360px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      animation: slideUp 0.25s ease;
+    }
+
+    @media (max-height: 600px) {
+      .popup {
+        padding: 16px 12px;
+        max-height: 80vh;
+        border-radius: 10px;
+      }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .popup-icon {
+      width: 44px;
+      height: 44px;
+      background: #e8f5e9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .popup-icon svg {
+      width: 22px;
+      height: 22px;
+      color: var(--green-dark);
+    }
+
+    .popup h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .popup p {
+      font-size: 0.8rem;
+      color: var(--neutral-600);
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    .popup-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-confirm {
+      flex: 1;
+      min-width: 100px;
+      background: var(--yellow);
+      color: var(--navy);
+      border: none;
+      padding: 11px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-confirm:hover { background: var(--yellow-dark); }
+
+    .btn-cancel {
+      flex: 1;
+      min-width: 100px;
+      background: var(--neutral-100);
+      color: var(--neutral-600);
+      border: 1px solid var(--neutral-200);
+      padding: 11px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover { background: var(--neutral-200); }
+
+    .captcha-step { display: none; }
+    .captcha-step.active { display: block; }
+    .welcome-step { display: block; }
+    .welcome-step.hidden { display: none; }
+
+    .captcha-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--neutral-600);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 4px;
+      text-align: left;
+    }
+
+    .captcha-question {
+      background: #e8f5e9;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .captcha-input {
+      width: 100%;
+      border: 1.5px solid var(--neutral-200);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 16px;
+      color: var(--neutral-800);
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 12px;
+    }
+
+    .captcha-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.12);
+    }
+
+    .captcha-input.error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+    }
+
+    .error-msg {
+      font-size: 0.75rem;
+      color: #ef4444;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      text-align: left;
+      display: none;
+    }
+
+    #confirmationScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--navy);
+    }
+
+    #confirmationScreen.active { display: flex; }
+
+    .confirmation-logo {
+      max-width: 220px;
+      margin-bottom: 32px;
+      border-radius: 12px;
+    }
+
+    .confirmation-icon {
+      width: 72px;
+      height: 72px;
+      background: #ecfdf5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .confirmation-icon svg {
+      width: 36px;
+      height: 36px;
+      color: #10b981;
+    }
+
+    .confirmation-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .confirmation-subtitle {
+      font-size: 0.95rem;
+      color: var(--neutral-400);
+      max-width: 360px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .loader {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .loader span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+
+    .loader span:nth-child(2) { animation-delay: 0.2s; }
+    .loader span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.5; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    .policy-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 40, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .policy-overlay.active { display: flex; }
+
+    .policy-modal {
+      background: var(--white);
+      border-radius: 14px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease;
+    }
+
+    .policy-header {
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid var(--neutral-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      z-index: 1;
+    }
+
+    .policy-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .policy-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--neutral-400);
+      padding: 4px;
+      border-radius: 6px;
+      transition: color 0.2s;
+    }
+
+    .policy-close:hover { color: var(--neutral-800); }
+
+    .policy-body {
+      padding: 20px 28px 28px;
+      font-size: 0.88rem;
+      color: var(--neutral-600);
+      line-height: 1.8;
+    }
+
+    .policy-body h4 {
+      color: var(--navy);
+      font-weight: 600;
+      margin: 16px 0 6px;
+    }
+
+    #mainContent {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+<div id="mainContent">
+
+  <main>
+    <div class="card">
+      <div class="card-badge">Verificação de Débitos</div>
+      <h1>Verifique seus débitos pendentes</h1>
+      <p class="subtitle">Clique abaixo para iniciar a verificação segura.</p>
+      <button class="btn-primary" onclick="openWelcomePopup()">
+        Verificar agora
+      </button>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-links">
+      <a href="#" onclick="openPolicy('privacy'); return false;">Política de Privacidade</a>
+      <span>•</span>
+      <a href="#" onclick="openPolicy('terms'); return false;">Termos de Uso</a>
+    </div>
+    <div>© 2025 Todos os direitos reservados.</div>
+  </footer>
+
+</div>
+
+<div id="confirmationScreen">
+  <img class="confirmation-logo" src="images/file-1778185169255.png" alt="Logo">
+
+  <div class="confirmation-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+    </svg>
+  </div>
+
+  <div class="confirmation-title">Verificação completa</div>
+  <p class="confirmation-subtitle">
+    Sua verificação foi realizada com sucesso.<br>
+    Aguarde o direcionamento para seus resultados.
+  </p>
+
+  <div class="loader">
+    <span></span><span></span><span></span>
+  </div>
+</div>
+
+<div class="overlay" id="popupOverlay">
+  <div class="popup">
+
+    <div class="welcome-step" id="welcomeStep">
+      <div class="popup-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+        </svg>
+      </div>
+      <h2>Bem-vindo à verificação</h2>
+      <p>Vamos fazer uma verificação rápida para validar sua identidade.</p>
+      <div class="popup-actions">
+        <button class="btn-confirm" onclick="goToCaptcha()">Iniciar</button>
+        <button class="btn-cancel" onclick="closePopup()">Cancelar</button>
+      </div>
+    </div>
+
+    <div class="captcha-step" id="captchaStep">
+      <div class="popup-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+      </div>
+      <h2>Prova de humanidade</h2>
+      <div class="captcha-question">Quanto é 2 + 3?</div>
+      <div class="captcha-label">Digite sua resposta</div>
+      <input type="text" class="captcha-input" id="captchaInput" placeholder="..." maxlength="5">
+      <div class="error-msg" id="errorMsg">Resposta incorreta. Tente novamente.</div>
+      <div class="popup-actions">
+        <button class="btn-confirm" onclick="checkCaptcha()">Prosseguir</button>
+        <button class="btn-cancel" onclick="goBack()">Voltar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="policy-overlay" id="privacyModal">
+  <div class="policy-modal">
+    <div class="policy-header">
+      <h3>Política de Privacidade</h3>
+      <button class="policy-close" onclick="closePolicy('privacy')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="policy-body">
+      <p>Esta plataforma respeita sua privacidade e está comprometida com a proteção dos seus dados pessoais, nos termos da Lei Geral de Proteção de Dados (LGPD).</p>
+      <h4>1. Dados coletados</h4>
+      <p>Coletamos apenas os dados estritamente necessários para o funcionamento do serviço.</p>
+      <h4>2. Finalidade</h4>
+      <p>Os dados são utilizados exclusivamente para viabilizar o serviço e garantir segurança.</p>
+      <h4>3. Compartilhamento</h4>
+      <p>Não compartilhamos dados pessoais com terceiros sem consentimento.</p>
+      <h4>4. Segurança</h4>
+      <p>Adotamos medidas técnicas para proteger seus dados contra acesso não autorizado.</p>
+      <h4>5. Seus direitos (LGPD)</h4>
+      <p>Você pode solicitar acesso, correção ou exclusão dos seus dados a qualquer momento.</p>
+    </div>
+  </div>
+</div>
+
+<div class="policy-overlay" id="termsModal">
+  <div class="policy-modal">
+    <div class="policy-header">
+      <h3>Termos de Uso</h3>
+      <button class="policy-close" onclick="closePolicy('terms')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="policy-body">
+      <p>Ao acessar e utilizar esta plataforma, você aceita os presentes Termos de Uso.</p>
+      <h4>1. Objeto</h4>
+      <p>Esta plataforma disponibiliza um canal de acesso a informações sobre débitos.</p>
+      <h4>2. Aceitação</h4>
+      <p>O uso implica aceitação integral destes termos.</p>
+      <h4>3. Responsabilidades do usuário</h4>
+      <p>O usuário compromete-se a utilizar a plataforma de forma lícita e de boa-fé.</p>
+      <h4>4. Limitação de responsabilidade</h4>
+      <p>A plataforma não se responsabiliza por danos do uso indevido.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openWelcomePopup() {
+    document.getElementById('popupOverlay').classList.add('active');
+    showWelcome();
+  }
+
+  function closePopup() {
+    document.getElementById('popupOverlay').classList.remove('active');
+    setTimeout(showWelcome, 300);
+  }
+
+  function showWelcome() {
+    document.getElementById('welcomeStep').classList.remove('hidden');
+    document.getElementById('captchaStep').classList.remove('active');
+    document.getElementById('captchaInput').value = '';
+    document.getElementById('captchaInput').classList.remove('error');
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  function goToCaptcha() {
+    document.getElementById('welcomeStep').classList.add('hidden');
+    document.getElementById('captchaStep').classList.add('active');
+    setTimeout(() => document.getElementById('captchaInput').focus(), 100);
+  }
+
+  function goBack() {
+    showWelcome();
+  }
+
+  function checkCaptcha() {
+    const input = document.getElementById('captchaInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const answer = input.value.trim();
+
+    if (answer === '5' || answer.toLowerCase() === 'cinco') {
+      showConfirmation();
+    } else {
+      input.classList.add('error');
+      errorMsg.style.display = 'block';
+      input.value = '';
+      input.focus();
+      setTimeout(() => {
+        input.classList.remove('error');
+        errorMsg.style.display = 'none';
+      }, 2500);
+    }
+  }
+
+  function showConfirmation() {
+    document.getElementById('popupOverlay').classList.remove('active');
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('confirmationScreen').classList.add('active');
+    setTimeout(() => {
+      const params = window.location.search;
+      window.location.href = 'inicio/index.html' + params;
+    }, 3000);
+  }
+
+  document.getElementById('captchaInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkCaptcha();
+  });
+
+  document.getElementById('popupOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closePopup();
+  });
+
+  function openPolicy(type) {
+    if (type === 'privacy') {
+      document.getElementById('privacyModal').classList.add('active');
+    } else {
+      document.getElementById('termsModal').classList.add('active');
+    }
+  }
+
+  function closePolicy(type) {
+    if (type === 'privacy') {
+      document.getElementById('privacyModal').classList.remove('active');
+    } else {
+      document.getElementById('termsModal').classList.remove('active');
+    }
+  }
+
+  document.getElementById('privacyModal').addEventListener('click', function(e) {
+    if (e.target === this) closePolicy('privacy');
+  });
+
+  document.getElementById('termsModal').addEventListener('click', function(e) {
+    if (e.target === this) closePolicy('terms');
+  });
+</script>
+
+</body>
+</html>

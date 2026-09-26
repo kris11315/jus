@@ -1,0 +1,2 @@
+2026-09-15T04:33:05+00:00 | paradise | id=10205848 | external_id=teste-auto-1789446720 | status=approved
+2026-09-15T04:40:46+00:00 | genesys | id=6a867e82-8817-43f4-b7cf-e21131d1374f | external_id=serasa-up-teste | status=authorized

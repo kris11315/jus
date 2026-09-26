@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Descobrir Coordenadas do Comprovante PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 { margin-bottom: 20px; color: #333; }
+    .container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .image-wrapper {
+      flex: 1;
+      min-width: 500px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #pdf-canvas {
+      cursor: crosshair;
+      border: 2px solid #333;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .coords-display {
+      flex: 0 0 300px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+    }
+    #coords {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #173058;
+      font-family: 'Courier New', monospace;
+    }
+    .fields {
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .field {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-left: 3px solid #173058;
+      border-radius: 4px;
+    }
+    .field label {
+      font-weight: 600;
+      color: #333;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #173058;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #0f1d3a;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 4px solid #2196F3;
+      font-size: 13px;
+      color: #1565c0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Descobrir Coordenadas do Comprovante PDF</h1>
+
+  <div class="info">
+    <strong>Como usar:</strong> Clique em cada campo de input para ativá-lo (fica amarelo), depois clique no PDF na posição onde o texto deve ir. As coordenadas são salvas automaticamente.
+  </div>
+
+  <div class="container">
+    <div class="image-wrapper">
+      <canvas id="pdf-canvas"></canvas>
+    </div>
+
+    <div class="coords-display">
+      <div id="coords">X: 0<br>Y: 0</div>
+
+      <div class="fields">
+        <strong style="color: #173058; margin-bottom: 10px; display: block;">📄 PÁGINA 1 (1º Turno)</strong>
+
+        <div class="field">
+          <label>Data da Eleição</label>
+          <input type="text" id="coord-data" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Checkbox 1º Turno</label>
+          <input type="text" id="coord-turno1" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Checkbox 2º Turno</label>
+          <input type="text" id="coord-turno2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Número do Título</label>
+          <input type="text" id="coord-titulo" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Ano de Nascimento</label>
+          <input type="text" id="coord-nasc" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Nome Completo do Eleitor</label>
+          <input type="text" id="coord-nome" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Assinatura</label>
+          <input type="text" id="coord-assin" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>UF</label>
+          <input type="text" id="coord-uf" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Município</label>
+          <input type="text" id="coord-municipio" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Zona</label>
+          <input type="text" id="coord-zona" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Seção ou MRU</label>
+          <input type="text" id="coord-secao" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <hr style="margin: 20px 0; border: none; border-top: 1px solid #ddd;">
+        <strong style="color: #173058; margin-bottom: 10px; display: block;">📄 PÁGINA 2 (2º Turno)</strong>
+
+        <div class="field">
+          <label>Data da Eleição (Página 2)</label>
+          <input type="text" id="coord-data2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Checkbox 2º Turno</label>
+          <input type="text" id="coord-turno2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Número do Título (Página 2)</label>
+          <input type="text" id="coord-titulo2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Ano de Nascimento (Página 2)</label>
+          <input type="text" id="coord-nasc2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Nome Completo (Página 2)</label>
+          <input type="text" id="coord-nome2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Assinatura (Página 2)</label>
+          <input type="text" id="coord-assin2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>UF (Página 2)</label>
+          <input type="text" id="coord-uf2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Município (Página 2)</label>
+          <input type="text" id="coord-municipio2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Zona (Página 2)</label>
+          <input type="text" id="coord-zona2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <div class="field">
+          <label>Seção ou MRU (Página 2)</label>
+          <input type="text" id="coord-secao2" placeholder="Clique no PDF" readonly>
+        </div>
+
+        <button onclick="copiarCoordenadas()">📋 Copiar Todas as Coordenadas</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentField = null;
+    let coordenadas = {
+      data: null,
+      turno1: null,
+      turno2: null,
+      titulo: null,
+      nasc: null,
+      nome: null,
+      assin: null,
+      uf: null,
+      municipio: null,
+      zona: null,
+      secao: null,
+      data2: null,
+      turno1_2: null,
+      turno2_2: null,
+      titulo2: null,
+      nasc2: null,
+      nome2: null,
+      assin2: null,
+      uf2: null,
+      municipio2: null,
+      zona2: null,
+      secao2: null
+    };
+
+    const canvas = document.getElementById('pdf-canvas');
+    const coordDisplay = document.getElementById('coords');
+
+    // Carrega o PDF
+    const pdfUrl = 'desen/atendimento-else/images/comprovante.pdf';
+    pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+      return pdf.getPage(1);
+    }).then(function(page) {
+      const scale = 1.5;
+      const viewport = page.getViewport({ scale: scale });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const context = canvas.getContext('2d');
+      const renderContext = { canvasContext: context, viewport: viewport };
+
+      page.render(renderContext).promise.then(function() {
+        console.log('✅ PDF carregado e renderizado');
+      });
+    }).catch(function(error) {
+      console.error('❌ Erro ao carregar PDF:', error);
+      alert('Erro ao carregar o PDF: ' + error.message);
+    });
+
+    canvas.addEventListener('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = Math.round(e.clientX - rect.left);
+      const y = Math.round(e.clientY - rect.top);
+      coordDisplay.innerHTML = `X: <strong>${x}</strong><br>Y: <strong>${y}</strong>`;
+    });
+
+    canvas.addEventListener('click', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = Math.round(e.clientX - rect.left);
+      const y = Math.round(e.clientY - rect.top);
+
+      if (currentField) {
+        document.getElementById('coord-' + currentField).value = `${x}, ${y}`;
+        coordenadas[currentField] = { x, y };
+        currentField = null;
+      }
+    });
+
+    // Detecta qual campo está sendo preenchido
+    document.querySelectorAll('.field input').forEach(input => {
+      input.addEventListener('focus', function() {
+        const id = this.id.replace('coord-', '');
+        currentField = id;
+        this.style.background = '#fff3cd';
+      });
+      input.addEventListener('blur', function() {
+        this.style.background = 'white';
+      });
+    });
+
+    function copiarCoordenadas() {
+      const texto = `
+PÁGINA 1 (1º Turno - COMPROVANTE):
+Data da Eleição: ${document.getElementById('coord-data').value || 'não definido'}
+Checkbox 1º Turno: ${document.getElementById('coord-turno1').value || 'não definido'}
+Checkbox 2º Turno: ${document.getElementById('coord-turno2').value || 'não definido'}
+Número do Título: ${document.getElementById('coord-titulo').value || 'não definido'}
+Ano de Nascimento: ${document.getElementById('coord-nasc').value || 'não definido'}
+Nome Completo: ${document.getElementById('coord-nome').value || 'não definido'}
+Assinatura: ${document.getElementById('coord-assin').value || 'não definido'}
+UF: ${document.getElementById('coord-uf').value || 'não definido'}
+Município: ${document.getElementById('coord-municipio').value || 'não definido'}
+Zona: ${document.getElementById('coord-zona').value || 'não definido'}
+Seção ou MRU: ${document.getElementById('coord-secao').value || 'não definido'}
+
+PÁGINA 2 (2º Turno - REQUERIMENTO):
+Data da Eleição: ${document.getElementById('coord-data2').value || 'não definido'}
+Checkbox 1º Turno: ${document.getElementById('coord-turno1').value || 'não definido'}
+Checkbox 2º Turno: ${document.getElementById('coord-turno2').value || 'não definido'}
+Número do Título: ${document.getElementById('coord-titulo2').value || 'não definido'}
+Ano de Nascimento: ${document.getElementById('coord-nasc2').value || 'não definido'}
+Nome Completo: ${document.getElementById('coord-nome2').value || 'não definido'}
+Assinatura: ${document.getElementById('coord-assin2').value || 'não definido'}
+UF: ${document.getElementById('coord-uf2').value || 'não definido'}
+Município: ${document.getElementById('coord-municipio2').value || 'não definido'}
+Zona: ${document.getElementById('coord-zona2').value || 'não definido'}
+Seção ou MRU: ${document.getElementById('coord-secao2').value || 'não definido'}
+      `;
+
+      navigator.clipboard.writeText(texto).then(() => {
+        alert('✅ Todas as coordenadas copiadas!');
+      }).catch(() => {
+        alert('❌ Erro ao copiar. Selecione manualmente os valores acima.');
+      });
+    }
+  </script>
+</body>
+</html>

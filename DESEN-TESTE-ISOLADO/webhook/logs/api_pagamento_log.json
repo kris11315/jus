@@ -1,0 +1,839 @@
+[
+    {
+        "time": "2026-09-15T04:30:43+00:00",
+        "gateway": "genesys",
+        "endpoint": "teste_fallback.php",
+        "httpCode": 0,
+        "curlError": "Could not resolve host: host-inexistente-para-teste.invalid",
+        "payload": {
+            "external_id": "teste-auto-1789446643",
+            "total_amount": 2,
+            "payment_method": "PIX",
+            "webhook_url": "https:\/\/meusite-teste.com\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "teste-auto-1789446643",
+                    "title": "Pilates em Casa",
+                    "description": "Pilates em Casa",
+                    "price": 2,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Joao da Silva Teste",
+                "email": "",
+                "phone": "11987654321",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste",
+                "click_id": "abc123",
+                "click_type": "fbclid"
+            },
+            "ip": "187.10.20.30"
+        },
+        "response": []
+    },
+    {
+        "time": "2026-09-15T04:30:43+00:00",
+        "gateway": "paradise",
+        "endpoint": "teste_fallback.php",
+        "httpCode": 400,
+        "curlError": "",
+        "payload": {
+            "amount": 200,
+            "description": "Pilates em Casa",
+            "reference": "teste-auto-1789446643",
+            "postback_url": "https:\/\/meusite-teste.com\/desen\/webhook-paradise\/index.php",
+            "offer_link": "https:\/\/meusite-teste.com\/desen\/atendimento-else\/",
+            "customer": {
+                "name": "Joao da Silva Teste",
+                "email": "",
+                "document": "52998224725",
+                "phone": "11987654321"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "error": "Campo obrigatório ausente em 'customer': email"
+        }
+    },
+    {
+        "time": "2026-09-15T04:32:00+00:00",
+        "gateway": "genesys",
+        "endpoint": "teste_fallback.php",
+        "httpCode": 0,
+        "curlError": "Could not resolve host: host-inexistente-para-teste.invalid",
+        "payload": {
+            "external_id": "teste-auto-1789446720",
+            "total_amount": 2,
+            "payment_method": "PIX",
+            "webhook_url": "https:\/\/meusite-teste.com\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "teste-auto-1789446720",
+                    "title": "Pilates em Casa",
+                    "description": "Pilates em Casa",
+                    "price": 2,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Joao da Silva Teste",
+                "email": "joao.teste@hotmail.com",
+                "phone": "11987654321",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste",
+                "click_id": "abc123",
+                "click_type": "fbclid"
+            },
+            "ip": "187.10.20.30"
+        },
+        "response": []
+    },
+    {
+        "time": "2026-09-15T04:32:06+00:00",
+        "gateway": "paradise",
+        "endpoint": "teste_fallback.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 200,
+            "description": "Pilates em Casa",
+            "reference": "teste-auto-1789446720",
+            "postback_url": "https:\/\/meusite-teste.com\/desen\/webhook-paradise\/index.php",
+            "offer_link": "https:\/\/meusite-teste.com\/desen\/atendimento-else\/",
+            "customer": {
+                "name": "Joao da Silva Teste",
+                "email": "joao.teste@hotmail.com",
+                "document": "52998224725",
+                "phone": "11987654321"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205848,
+            "id": "teste-auto-1789446720",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/42da16ec7b1140ac90834271d83608105204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***6304E355",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/42da16ec7b1140ac90834271d8360810.png",
+            "amount": 200,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:32:08.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:34:46+00:00",
+        "gateway": "genesys",
+        "endpoint": "teste_genesys.php",
+        "httpCode": 400,
+        "curlError": "",
+        "payload": {
+            "external_id": "teste-genesys-1789446884",
+            "total_amount": 2,
+            "payment_method": "PIX",
+            "webhook_url": "https:\/\/meusite-teste.com\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "teste-genesys-1789446884",
+                    "title": "Pilates em Casa",
+                    "description": "Pilates em Casa",
+                    "price": 2,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Maria Teste Genesys",
+                "email": "maria.genesys@hotmail.com",
+                "phone": "11912345678",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste"
+            },
+            "ip": "187.10.20.30"
+        },
+        "response": {
+            "hasError": true,
+            "error": "A transação não atingiu o valor suficiente para cobrir suas taxas.",
+            "errorFields": [],
+            "statusCode": 400,
+            "timestamp": "2026-09-15T04:34:49.530Z",
+            "path": "\/v1\/transactions"
+        }
+    },
+    {
+        "time": "2026-09-15T04:34:50+00:00",
+        "gateway": "paradise",
+        "endpoint": "teste_genesys.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 200,
+            "description": "Pilates em Casa",
+            "reference": "teste-genesys-1789446884",
+            "postback_url": "https:\/\/meusite-teste.com\/desen\/webhook-paradise\/index.php",
+            "offer_link": "https:\/\/meusite-teste.com\/desen\/atendimento-else\/",
+            "customer": {
+                "name": "Maria Teste Genesys",
+                "email": "maria.genesys@hotmail.com",
+                "document": "52998224725",
+                "phone": "11912345678"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205860,
+            "id": "teste-genesys-1789446884",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/efb345885685484f95bd6046f97375c55204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***630400CF",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/efb345885685484f95bd6046f97375c5.png",
+            "amount": 200,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:34:53.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:35:27+00:00",
+        "gateway": "genesys",
+        "endpoint": "teste_genesys.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "teste-genesys-1789446924",
+            "total_amount": 10,
+            "payment_method": "PIX",
+            "webhook_url": "https:\/\/meusite-teste.com\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "teste-genesys-1789446924",
+                    "title": "Pilates em Casa",
+                    "description": "Pilates em Casa",
+                    "price": 10,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Maria Teste Genesys",
+                "email": "maria.genesys@hotmail.com",
+                "phone": "11912345678",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste"
+            },
+            "ip": "187.10.20.30"
+        },
+        "response": {
+            "id": "22014c06-ba14-49e4-a703-708e9d4d5ee9",
+            "external_id": "teste-genesys-1789446924",
+            "status": "PENDING",
+            "total_value": 10,
+            "customer": {
+                "email": "maria.genesys@hotmail.com",
+                "name": "Maria Teste Genesys"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/57af5676-7977-4126-ad6e-e8d144cf9ca05204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***6304AAEB"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-15T04:37:49+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-1789447066-5840",
+            "total_amount": 34.46,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8124\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-1789447066-5840",
+                    "title": "Pilates em Casa (50% OFF)",
+                    "description": "Pilates em Casa (50% OFF)",
+                    "price": 34.46,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Carlos Teste Endpoint",
+                "email": "carlos.endpoint@hotmail.com",
+                "phone": "11911112222",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste",
+                "click_id": "IwAR-endpoint",
+                "click_type": "fbclid"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "id": "41488ddd-8e3a-4eb3-8607-d13352129c7e",
+            "external_id": "serasa-1789447066-5840",
+            "status": "PENDING",
+            "total_value": 34.46,
+            "customer": {
+                "email": "carlos.endpoint@hotmail.com",
+                "name": "Carlos Teste Endpoint"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/7657b9f2-4796-4274-8d5b-58d140277ff45204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***630400B8"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-15T04:38:08+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento-upsell.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-up-1789447086-5814",
+            "total_amount": 38.4,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8124\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-up-1789447086-5814",
+                    "title": "Ebook Doces Fit",
+                    "description": "Ebook Doces Fit",
+                    "price": 38.4,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Ana Upsell",
+                "email": "ana.upsell@hotmail.com",
+                "phone": "11933334444",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "id": "d2cdfc2e-23df-4679-bf54-a6482a10bfdb",
+            "external_id": "serasa-up-1789447086-5814",
+            "status": "PENDING",
+            "total_value": 38.4,
+            "customer": {
+                "email": "ana.upsell@hotmail.com",
+                "name": "Ana Upsell"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/d0517f9e-0e4a-404b-9f4f-e558198828cc5204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***6304775A"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-15T04:38:39+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento.php",
+        "httpCode": 403,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-1789447118-3736",
+            "total_amount": 34.46,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8125\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-1789447118-3736",
+                    "title": "Pilates em Casa (50% OFF)",
+                    "description": "Pilates em Casa (50% OFF)",
+                    "price": 34.46,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Pedro Fallback Real",
+                "email": "pedro.real@hotmail.com",
+                "phone": "11955556666",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste",
+                "utm_campaign": "camp-fallback",
+                "click_id": "IwAR-fallback-real",
+                "click_type": "fbclid"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "hasError": true,
+            "error": "Chave de API inválida",
+            "errorFields": [],
+            "statusCode": 403,
+            "timestamp": "2026-09-15T04:38:42.781Z",
+            "path": "\/v1\/transactions"
+        }
+    },
+    {
+        "time": "2026-09-15T04:38:40+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 3446,
+            "description": "Pilates em Casa (50% OFF)",
+            "reference": "serasa-1789447118-3736",
+            "postback_url": "http:\/\/127.0.0.1:8125\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8125\/desen\/atendimento-else\/",
+            "customer": {
+                "name": "Pedro Fallback Real",
+                "email": "pedro.real@hotmail.com",
+                "document": "52998224725",
+                "phone": "11955556666"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste",
+                "utm_campaign": "camp-fallback"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205885,
+            "id": "serasa-1789447118-3736",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/3be4f04542604878a6dc94d936f685435204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***6304FE89",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/3be4f04542604878a6dc94d936f68543.png",
+            "amount": 3446,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:38:43.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:40:44+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento-upsell.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-up-1789447242-6769",
+            "total_amount": 43.92,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8126\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-up-1789447242-6769",
+                    "title": "Guia de Receitas Saudáveis",
+                    "description": "Guia de Receitas Saudáveis",
+                    "price": 43.92,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Teste Webhook Genesys",
+                "email": "teste.genesys@hotmail.com",
+                "phone": "11922223333",
+                "document_type": "CPF",
+                "document": "11144477735",
+                "utm_source": "teste",
+                "utm_campaign": "camp-wh"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "id": "6a867e82-8817-43f4-b7cf-e21131d1374f",
+            "external_id": "serasa-up-1789447242-6769",
+            "status": "PENDING",
+            "total_value": 43.92,
+            "customer": {
+                "email": "teste.genesys@hotmail.com",
+                "name": "Teste Webhook Genesys"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/84246273-8d07-4337-8117-10c6dc5620405204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***6304FB61"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-15T04:48:32+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 6892,
+            "description": "Pilates em Casa",
+            "reference": "serasa-1789447711-6485",
+            "postback_url": "http:\/\/127.0.0.1:8127\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8127",
+            "customer": {
+                "name": "Teste Inversao",
+                "email": "teste.inversao@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205941,
+            "id": "serasa-1789447711-6485",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/ba64c3d7f6744ec699deef6c2f497be15204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***63048B23",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/ba64c3d7f6744ec699deef6c2f497be1.png",
+            "amount": 6892,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:48:36.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:48:34+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 3446,
+            "description": "Pilates em Casa (50% OFF)",
+            "reference": "serasa-1789447713-5453",
+            "postback_url": "http:\/\/127.0.0.1:8127\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8127",
+            "customer": {
+                "name": "Teste Inversao",
+                "email": "teste.inversao@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205942,
+            "id": "serasa-1789447713-5453",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/2fa22af9ba0b4e67b7280f7b25ea4e515204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***63048021",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/2fa22af9ba0b4e67b7280f7b25ea4e51.png",
+            "amount": 3446,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:48:37.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:48:35+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 4392,
+            "description": "Guia de Receitas Saudáveis",
+            "reference": "serasa-1789447714-3532",
+            "postback_url": "http:\/\/127.0.0.1:8127\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8127",
+            "customer": {
+                "name": "Teste Inversao",
+                "email": "teste.inversao@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205943,
+            "id": "serasa-1789447714-3532",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/3855d159ca954f13bba9e827aeaabc525204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***630468C2",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/3855d159ca954f13bba9e827aeaabc52.png",
+            "amount": 4392,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:48:38.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:48:36+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 6743,
+            "description": "Grupo VIP",
+            "reference": "serasa-1789447715-5973",
+            "postback_url": "http:\/\/127.0.0.1:8127\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8127",
+            "customer": {
+                "name": "Teste Inversao",
+                "email": "teste.inversao@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205944,
+            "id": "serasa-1789447715-5973",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/69992e3989c54f93b4087ac34acd49e45204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***63045BF1",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/69992e3989c54f93b4087ac34acd49e4.png",
+            "amount": 6743,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:48:39.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:48:37+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento-upsell.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 7825,
+            "description": "10 Exercicios diários",
+            "reference": "serasa-up-1789447716-8779",
+            "postback_url": "http:\/\/127.0.0.1:8127\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8127",
+            "customer": {
+                "name": "Teste Inversao",
+                "email": "teste.inversao@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10205945,
+            "id": "serasa-up-1789447716-8779",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/d275dc533d5f4611a817e6f05858fdda5204000053039865802BR5918ORBE SERVICES LTDA6009SAO PAULO62070503***630431A4",
+            "qr_code_base64": "https:\/\/api.somossimpay.com.br\/v2\/finance\/image\/qrcode\/d275dc533d5f4611a817e6f05858fdda.png",
+            "amount": 7825,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": "2026-09-17T01:48:40.000Z"
+        }
+    },
+    {
+        "time": "2026-09-15T04:49:06+00:00",
+        "gateway": "paradise",
+        "endpoint": "pagamento.php",
+        "httpCode": 401,
+        "curlError": "",
+        "payload": {
+            "amount": 3840,
+            "description": "Ebook Doces Fit",
+            "reference": "serasa-1789447745-8926",
+            "postback_url": "http:\/\/127.0.0.1:8128\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/127.0.0.1:8128",
+            "customer": {
+                "name": "Teste Fallback Reverso",
+                "email": "teste.reverso@hotmail.com",
+                "document": "52998224725",
+                "phone": "11911112222"
+            },
+            "source": "api_externa",
+            "tracking": {
+                "utm_source": "teste"
+            }
+        },
+        "response": {
+            "error": "API Key inválida ou loja inativa"
+        }
+    },
+    {
+        "time": "2026-09-15T04:49:08+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-1789447745-8926",
+            "total_amount": 38.4,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8128\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-1789447745-8926",
+                    "title": "Ebook Doces Fit",
+                    "description": "Ebook Doces Fit",
+                    "price": 38.4,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Teste Fallback Reverso",
+                "email": "teste.reverso@hotmail.com",
+                "phone": "11911112222",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "id": "e7c95afd-21e7-4d2e-8634-3481e06fac09",
+            "external_id": "serasa-1789447745-8926",
+            "status": "PENDING",
+            "total_value": 38.4,
+            "customer": {
+                "email": "teste.reverso@hotmail.com",
+                "name": "Teste Fallback Reverso"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/a308fe93-f069-4322-8a1a-39636c65b1695204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***6304D4C5"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-15T04:49:50+00:00",
+        "gateway": "genesys",
+        "endpoint": "pagamento.php",
+        "httpCode": 201,
+        "curlError": "",
+        "payload": {
+            "external_id": "serasa-1789447787-5501",
+            "total_amount": 45.6,
+            "payment_method": "PIX",
+            "webhook_url": "http:\/\/127.0.0.1:8129\/desen\/webhook\/index.php",
+            "items": [
+                {
+                    "id": "serasa-1789447787-5501",
+                    "title": "Metódo Resultados Acelerados",
+                    "description": "Metódo Resultados Acelerados",
+                    "price": 45.6,
+                    "quantity": 1,
+                    "is_physical": false
+                }
+            ],
+            "customer": {
+                "name": "Teste Volta",
+                "email": "teste.volta@hotmail.com",
+                "phone": "11911112222",
+                "document_type": "CPF",
+                "document": "52998224725",
+                "utm_source": "teste"
+            },
+            "ip": "127.0.0.1"
+        },
+        "response": {
+            "id": "c02edb0b-c5a4-4e0a-a09f-e47c8ef3fc43",
+            "external_id": "serasa-1789447787-5501",
+            "status": "PENDING",
+            "total_value": 45.6,
+            "customer": {
+                "email": "teste.volta@hotmail.com",
+                "name": "Teste Volta"
+            },
+            "payment_method": "PIX",
+            "pix": {
+                "payload": "00020126850014br.gov.bcb.pix2563pix.onlyup.com.br\/qr\/v3\/at\/5d92d7b7-3a93-4314-ba8b-3a98b96dbc055204000053039865802BR5911PAYNET_LTDA6008BRASILIA62070503***63046ADB"
+            },
+            "hasError": false
+        }
+    },
+    {
+        "time": "2026-09-25T01:54:17+00:00",
+        "gateway": "paradise",
+        "endpoint": "pix.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 1790,
+            "description": "Comprovante de Justificativa de Voto - e-Título",
+            "reference": "pix-1790301253-7665",
+            "postback_url": "http:\/\/localhost\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/localhost\/etitulo\/DESEN-TESTE-ISOLADO\/desen\/atendimento-else\/index.html",
+            "customer": {
+                "name": "BIANCA CRISTINA JESUS DA SILVA",
+                "email": "biacjsilva1995@gmail.com",
+                "document": "07464342518",
+                "phone": "11999999999"
+            },
+            "source": "api_externa"
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10405438,
+            "id": "pix-1790301253-7665",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/6a9eed3dce7b444cb6768dbd6075bdca5204000053039865802BR5925SERVICOS DE COMPRAS BUSIN6009SAO PAULO62070503***6304AD7D",
+            "qr_code_base64": null,
+            "amount": 1790,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": null
+        }
+    },
+    {
+        "time": "2026-09-25T02:58:00+00:00",
+        "gateway": "paradise",
+        "endpoint": "pix.php",
+        "httpCode": 200,
+        "curlError": "",
+        "payload": {
+            "amount": 1790,
+            "description": "Comprovante de Justificativa de Voto - e-Título",
+            "reference": "pix-1790305078-1446",
+            "postback_url": "http:\/\/localhost\/desen\/webhook-paradise\/index.php",
+            "offer_link": "http:\/\/localhost\/etitulo\/DESEN-TESTE-ISOLADO\/desen\/atendimento-else\/index.html",
+            "customer": {
+                "name": "BIANCA CRISTINA JESUS DA SILVA",
+                "email": "justificando@gmail.com",
+                "document": "07464342518",
+                "phone": "11999999999"
+            },
+            "source": "api_externa"
+        },
+        "response": {
+            "status": "success",
+            "transaction_id": 10405880,
+            "id": "pix-1790305078-1446",
+            "qr_code": "00020101021226900014br.gov.bcb.pix2568qrcode.somossimpay.com.br\/v2\/qr\/cob\/b3ff171ea1f7404ebdff8d2b9ce9c9315204000053039865802BR5925SERVICOS DE COMPRAS BUSIN6009SAO PAULO62070503***63046728",
+            "qr_code_base64": null,
+            "amount": 1790,
+            "acquirer": "ParadiseBank",
+            "attempts": 1,
+            "expires_at": null
+        }
+    }
+]

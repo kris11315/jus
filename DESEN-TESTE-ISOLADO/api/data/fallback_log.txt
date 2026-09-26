@@ -1,0 +1,5 @@
+2026-09-15T04:30:43+00:00 | FALLBACK | origem=teste_fallback.php | ref=teste-auto-1789446643 | genesys_http=0 | genesys_erro=Erro de conexao: Could not resolve host: host-inexistente-para-teste.invalid
+2026-09-15T04:32:00+00:00 | FALLBACK | origem=teste_fallback.php | ref=teste-auto-1789446720 | genesys_http=0 | genesys_erro=Erro de conexao: Could not resolve host: host-inexistente-para-teste.invalid
+2026-09-15T04:34:46+00:00 | FALLBACK | origem=teste_genesys.php | ref=teste-genesys-1789446884 | genesys_http=400 | genesys_erro=A transação não atingiu o valor suficiente para cobrir suas taxas.
+2026-09-15T04:38:39+00:00 | FALLBACK | origem=pagamento.php | ref=serasa-1789447118-3736 | genesys_http=403 | genesys_erro=Chave de API inválida
+2026-09-15T04:49:06+00:00 | FALLBACK | origem=pagamento.php | ref=serasa-1789447745-8926 | caiu=paradise | http=401 | erro=API Key inválida ou loja inativa
